@@ -35,17 +35,20 @@ $ wget -q -O - --no-check-certificate https://raw.github.com/petervanderdoes/git
 - (예시 1) feature_A branch 에서 작업 중 feature_B branch 로 넘어가고 싶을 때.
 ```shell
 (feature_A branch 에 있는 생태)
-git add .
-git commit -m "desc"
-git push origin feature/1-feature-A
-git checkout feature/2-feature-B
-git pull
+$ git add .
+$ git commit -m "desc"
+$ git push origin feature/1-feature-A
+$ git checkout feature/2-feature-B
+$ git pull
 ```
 ```
-main branch 는 main/
-develop branch 는 develop/
+main branch 는 main
+develop branch 는 develop
 feature branch 는 feature/
-
+```
+```
+main 및 develop branch 는 각 1개씩 존재.
+feature/feature_desc_1, feature/feature_desc_2 와 같이 feature branch 는 여러개 존재 가능
 ```
 ### Collaboration
 - ***main - (release) - develop - feature*** 단위로 branch 를 두고 작업하게 됨.
@@ -58,9 +61,20 @@ feature branch 는 feature/
 - (예시 2) git branch 생성 (issue_id: 1, issue_desc: add progress bar)
 ```shell
 (예시 1 참고해서 작업 중인 것을 commit 을 다 한 뒤에,,)
-git branch feature/1-add-progress-bar
-git checkout feature/1-add-progress-bar
-git pull
+$ git branch feature/1-add-progress-bar
+$ git checkout feature/1-add-progress-bar
+$ git pull
+```
+- (예시 3) git release 시에 tag 따기
+```shell
+(git flow 를 사용합니다)
+(작업 중인 것을 모두 commit/push 한 상태입니다)
+$ git checkout develop
+$ git pull origin develop
+$ git flow release start 0.1.0 develop
+$ git flow release publish 0.1.0
+$ git flow release finish 0.1.0
+$ git push --tags
 ```
 ### Release Staging Area
 - 각자가 feature branch 에서 작업한 뒤에 develop branch 에 merge. (code review 필요)
@@ -69,3 +83,8 @@ git pull
 - 추가로, ***hotfix branch*** 가 있는데 말 그대로 bugfix 용임.
 - main branch 에서 hotfix branch 를 따서 bugfix 한 뒤에 main/develop branch 에 merge 해야 함.
 - main branch 의 tag version 이 올라감. (ex. 1.0.0 -> 1.0.1)
+
+## 자주 사용하는 git cmd 모음
+```
+git diff
+```
