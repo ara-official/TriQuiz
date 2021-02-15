@@ -65,6 +65,9 @@ $ git pull
 - (예시 3) git release 시에 tag 따기
 ```shell
 (git flow 를 사용합니다)
+(작업 중인 것을 모두 commit/push 한 상태입니다)
+$ git checkout develop
+$ git pull
 $ git flow release start 0.1.0 main
 $ git flow release publish 0.1.0
 $ git flow release finish 0.1.0
