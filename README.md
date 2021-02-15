@@ -65,13 +65,14 @@ $ git branch feature/1-add-progress-bar
 $ git checkout feature/1-add-progress-bar
 $ git pull
 ```
-- (예시 3) git release 시에 tag 따기
+- (예시 3) git release 시에 main 에서 tag 따기
 ```shell
 (git flow 를 사용합니다)
 (작업 중인 것을 모두 commit/push 한 상태입니다)
-$ git checkout develop
-$ git pull origin develop
-$ git flow release start 0.1.0 develop
+(그리고 develop branch 에서 작업한 것도 main branch 에 merge 된 상태입니다)
+$ git checkout main
+$ git pull origin main
+$ git flow release start 0.1.0 main
 $ git flow release publish 0.1.0
 $ git flow release finish 0.1.0
 $ git push --tags
@@ -86,5 +87,10 @@ $ git push --tags
 
 ## 자주 사용하는 git cmd 모음
 ```
-git diff
+(변경점 확인)
+$ git diff
+(로컬 branch 삭제)
+$ git branch -d [branch 명]
+(원격지 branch 삭제)
+$ git push origin --delete release/0.2.0
 ```
