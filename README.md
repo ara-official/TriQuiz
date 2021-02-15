@@ -86,5 +86,10 @@ $ git push --tags
 
 ## 자주 사용하는 git cmd 모음
 ```
-git diff
+(변경점 확인)
+$ git diff
+(로컬 branch 삭제)
+$ git branch -d [branch 명]
+(원격지 branch 삭제)
+$ git push origin --delete release/0.2.0
 ```
