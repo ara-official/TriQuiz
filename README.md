@@ -35,11 +35,11 @@ $ wget -q -O - --no-check-certificate https://raw.github.com/petervanderdoes/git
 - (예시 1) feature_A branch 에서 작업 중 feature_B branch 로 넘어가고 싶을 때.
 ```shell
 (feature_A branch 에 있는 생태)
-git add .
-git commit -m "desc"
-git push origin feature/1-feature-A
-git checkout feature/2-feature-B
-git pull
+$ git add .
+$ git commit -m "desc"
+$ git push origin feature/1-feature-A
+$ git checkout feature/2-feature-B
+$ git pull
 ```
 ```
 main branch 는 main
@@ -61,9 +61,17 @@ feature/feature_desc_1, feature/feature_desc_2 와 같이 feature branch 는 여
 - (예시 2) git branch 생성 (issue_id: 1, issue_desc: add progress bar)
 ```shell
 (예시 1 참고해서 작업 중인 것을 commit 을 다 한 뒤에,,)
-git branch feature/1-add-progress-bar
-git checkout feature/1-add-progress-bar
-git pull
+$ git branch feature/1-add-progress-bar
+$ git checkout feature/1-add-progress-bar
+$ git pull
+```
+- (예시 3) git release 시에 tag 따기
+```shell
+(git flow 를 사용합니다)
+$ git flow release start 0.1.0 main
+$ git flow release publish 0.1.0
+$ git flow release finish 0.1.0
+$ git push --tags
 ```
 ### Release Staging Area
 - 각자가 feature branch 에서 작업한 뒤에 develop branch 에 merge. (code review 필요)
