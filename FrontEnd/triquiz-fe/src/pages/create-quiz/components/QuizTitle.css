@@ -1,0 +1,46 @@
+.quiz-title {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    margin: 1rem 0rem;
+}
+.text-input {
+    font-size: 2rem;
+    border: none;
+    border-bottom: solid 0.2rem black;
+    margin: 1.2rem 1.2rem 0rem 1.2rem;
+    outline: none;
+}
+.description-input {
+    font-size: 1rem;
+    border: none;
+    border-bottom: solid 0.2rem black;
+    margin: 1.2rem 1.2rem 0rem 1.2rem;
+    outline: none;
+    resize: none;
+}
+.image-input {
+    margin: 1.2rem 1.2rem 0rem 1.2rem;
+    font-size: 1.3rem;
+}
+.image-input > label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.image-input span {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+}
+.password-div {
+    margin: 1.2rem;
+    font-size: 1.3rem;
+}
+.password-input {
+    margin-left: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    border-bottom: solid 0.2rem black;
+    outline: none;
+}

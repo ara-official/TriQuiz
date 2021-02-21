@@ -1,0 +1,28 @@
+.question-item {
+    margin: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+}
+.item-radial {
+    cursor: pointer;
+}
+.item-text {
+    margin: 0rem 1rem;
+    outline: none;
+    border: none;
+    border-bottom: solid 0.1rem black;
+    font-size: 0.8rem;
+    padding: 0.5rem;
+    min-width: 15rem;
+    width: 30%;
+}
+.item-image label {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+.remove-item {
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: #333333;
+}
