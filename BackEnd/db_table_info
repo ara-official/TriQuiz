@@ -25,7 +25,7 @@ carete_time DATETIME DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY(question_id)
 );
 
-CREATE TABLE questions(
+CREATE TABLE question_items(
 question_item_id BIGINT NOT NULL AUTO_INCREMENT,
 quiz_id BIGINT NOT NULL,
 sequence INT NOT NULL,
