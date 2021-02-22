@@ -14,6 +14,17 @@ $ nest new project-name
 $ sudo nest new project-name
 ```
 
+## 2 run
+```shell
+$ npm install
+$ npm start
+```
+
+## 3 command
+```shell
+$ nest g co
+(controller name)
+```
 
 # Insomnia.rest
 REST Client. End Point Test Tool.
