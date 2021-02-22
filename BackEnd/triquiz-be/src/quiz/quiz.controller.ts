@@ -1,39 +1,46 @@
-import { Controller, Get, Post, Delete, Param, Patch, Body, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  Patch,
+  Body,
+  Query,
+} from '@nestjs/common';
+import { QuizService } from './quiz.service';
+import { Quiz } from './entities/quiz.entities'
 
 @Controller('quiz')
 export class QuizController {
+  constructor(readonly quizService: QuizService) {} // NOTE: service 에 접근하기 위해서 생성자에서 요청해야 함.
 
-    @Get()
-    getAll(){
-        return 'This will return all quizzes';
-    }
+  @Get()
+  getAll(): Quiz[]{
+    return this.quizService.getAll();
+  }
 
-    @Get('search')
-    search(@Query('year') searchingYear:string, @Query('month') searchingMonth, @Query('day') searchingDay, @Query('hour') searchingHour){
-        return `We are searching for a quiz made after: ${searchingYear}:${searchingMonth}:${searchingDay}:${searchingHour}`;
-    }
+  @Get('/:id')
+  getOne(@Param('id') quizId: string): Quiz{
+    return this.quizService.getOne(quizId);
+  }
 
-    @Get('/:id')
-    getOne(@Param('id') quizId: string){
-        return `This will return one quiz with the id: ${quizId}`;
-    }
+  @Post()
+  create(@Body() quizData) {
+    console.log(quizData);
+    return this.quizService.create(quizData);
+  }
 
-    @Post()
-    create(@Body() quizData){
-        console.log(quizData);
-        return 'This will create a quiz';
-    }
+  @Delete('/:id')
+  remove(@Param('id') quizId: string) {
+    return this.quizService.delete(quizId);
+  }
 
-    @Delete('/:id')
-    remove(@Param('id') quizId: string){
-        return `This will delete a quiz with the id: ${quizId}`;
-    }
-
-    @Patch('/:id') // NOTE: Patch 는 일부만 수정할 때 사용. 참고로 Put 은 전체를 수정할 때 사용된다고 한다.
-    update(@Param('id') quizId: string, @Body() updateData){
-        return {
-            updatedQuiz: quizId,
-            ...updateData,
-        }
-    }
+  @Patch('/:id') // NOTE: Patch 는 일부만 수정할 때 사용. 참고로 Put 은 전체를 수정할 때 사용된다고 한다.
+  update(@Param('id') quizId: string, @Body() updateData) {
+    return {
+      updatedQuiz: quizId,
+      ...updateData,
+    };
+  }
 }
