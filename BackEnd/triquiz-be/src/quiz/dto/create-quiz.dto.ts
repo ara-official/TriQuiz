@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'; // NOTE: [참고] https://github.com/typestack/class-validator
 
 export class CreateQuizDto {
   @IsString()
@@ -13,6 +13,7 @@ export class CreateQuizDto {
   readonly authorId: string;
   @IsString()
   readonly password: string;
+  @IsOptional()
   readonly questions: [QuestionDto];
 }
 
@@ -27,6 +28,7 @@ class QuestionDto {
   readonly image: string;
   @IsString()
   readonly answer: string;
+  @IsOptional()
   readonly questionItems: [QuestionItem];
 }
 

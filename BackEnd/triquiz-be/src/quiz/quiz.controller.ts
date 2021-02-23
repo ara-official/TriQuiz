@@ -11,6 +11,7 @@ import {
 import { QuizService } from './quiz.service';
 import { Quiz } from './entities/quiz.entities'
 import { CreateQuizDto } from './dto/create-quiz.dto';
+import { UpdateQuizDto } from './dto/update-quiz.dto';
 
 @Controller('quiz')
 export class QuizController {
@@ -22,7 +23,8 @@ export class QuizController {
   }
 
   @Get('/:id')
-  getOne(@Param('id') quizId: string): Quiz{
+  getOne(@Param('id') quizId: number): Quiz{
+    console.log(typeof quizId);
     return this.quizService.getOne(quizId);
   }
 
@@ -33,12 +35,12 @@ export class QuizController {
   }
 
   @Delete('/:id')
-  remove(@Param('id') quizId: string) {
+  remove(@Param('id') quizId: number) {
     return this.quizService.deleteOne(quizId);
   }
 
   @Patch('/:id') // NOTE: Patch 는 일부만 수정할 때 사용. 참고로 Put 은 전체를 수정할 때 사용된다고 한다.
-  update(@Param('id') quizId: string, @Body() updateData: CreateQuizDto) {
+  update(@Param('id') quizId: number, @Body() updateData: UpdateQuizDto) {
     return this.quizService.update(quizId, updateData);
   }
 }
