@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {modifyQuestion, removeQuestion, useCreateQuizDispatch} from "../CreateQuizContext";
-import {FaTimes, BsImage, GrRadial} from "react-icons/all";
+import {FaTimes, BsImage, GrRadial, GrDrag} from "react-icons/all";
 import CreateQuizQuestionItem from "./CreateQuizQuestionItem";
 import "./QuizQuestion.css";
 
@@ -89,9 +89,14 @@ function CreateQuizQuestion({ question }) {
     };
 
     return (
-        <div className="question">
-            <div className="remove-question" onClick={removeQuestionOnClick}>
-                <FaTimes/>
+        <div className="question" draggable={true}>
+            <div className="controll-bar">
+                <div className="drag-drop-bar" >
+                    <GrDrag className="rotate-90"/>
+                </div>
+                <div className="remove-question" onClick={removeQuestionOnClick}>
+                    <FaTimes/>
+                </div>
             </div>
             <div className="flex">
                 <input type="text" className="question-title-input"
