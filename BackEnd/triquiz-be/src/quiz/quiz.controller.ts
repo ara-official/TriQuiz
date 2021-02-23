@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { QuizService } from './quiz.service';
 import { Quiz } from './entities/quiz.entities'
+import { CreateQuizDto } from './dto/create-quiz.dto';
 
 @Controller('quiz')
 export class QuizController {
@@ -26,21 +27,18 @@ export class QuizController {
   }
 
   @Post()
-  create(@Body() quizData) {
+  create(@Body() quizData: CreateQuizDto) {
     console.log(quizData);
     return this.quizService.create(quizData);
   }
 
   @Delete('/:id')
   remove(@Param('id') quizId: string) {
-    return this.quizService.delete(quizId);
+    return this.quizService.deleteOne(quizId);
   }
 
   @Patch('/:id') // NOTE: Patch 는 일부만 수정할 때 사용. 참고로 Put 은 전체를 수정할 때 사용된다고 한다.
-  update(@Param('id') quizId: string, @Body() updateData) {
-    return {
-      updatedQuiz: quizId,
-      ...updateData,
-    };
+  update(@Param('id') quizId: string, @Body() updateData: CreateQuizDto) {
+    return this.quizService.update(quizId, updateData);
   }
 }
