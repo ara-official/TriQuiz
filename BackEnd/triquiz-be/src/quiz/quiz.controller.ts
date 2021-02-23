@@ -3,8 +3,8 @@ import { CreateQuizDto } from './dto/create-quiz.dto';
 import { Request } from 'express';
 import { sample } from './dto/sample.dto';
 
-@Controller('create-quiz')
-export class CreateQuizController {
+@Controller('quiz')
+export class QuizController {
     @Post()
     async CreateQuiz(@Body() Sample : sample){
         console.log(sample);
