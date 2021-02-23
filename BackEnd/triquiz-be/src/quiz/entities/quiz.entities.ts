@@ -33,9 +33,9 @@ export class Quiz{
     id: number;
     title: string;
     description: string;
-    thumbnail_image: string;
+    thumbnailImage: string;
     private: boolean;
-    author_id: string;
+    authorId: string;
     password: string;
     questions: [Question];
 }
@@ -45,8 +45,8 @@ class Question{
     hint: string;
     type: string;
     image: string;
-    placeholder: string;
-    question_items: [QuestionItem];
+    answer: string;
+    questionItems: [QuestionItem];
 }
 class QuestionItem{
     sequence: number;
