@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {modifyQuestion, removeQuestion, useCreateQuizDispatch} from "../CreateQuizContext";
 import {FaTimes, BsImage, GrRadial} from "react-icons/all";
 import CreateQuizQuestionItem from "./CreateQuizQuestionItem";
@@ -8,6 +8,10 @@ function CreateQuizQuestion({ question }) {
     const [questionState, setQuestionState] = useState(question);
     const quizDispatch = useCreateQuizDispatch();
     const sequenceNum = useRef(1);
+
+    useEffect(() => {
+        quizDispatch(modifyQuestion(questionState));
+    }, [questionState]);
 
     const titleOnChange = e => setQuestionState({
         ...questionState,
@@ -29,9 +33,9 @@ function CreateQuizQuestion({ question }) {
         image: e.target.value
     });
 
-    const placeholderOnChange = e => setQuestionState({
+    const answerOnChange = e => setQuestionState({
         ...questionState,
-        placeholder: e.target.value
+        answer: e.target.value
     });
 
     const itemTextOnChange = (seq, text) => setQuestionState({
@@ -58,30 +62,34 @@ function CreateQuizQuestion({ question }) {
         )
     });
 
+    const itemAnswerOnClick = answer => setQuestionState({
+        ...questionState,
+        answer
+    });
+
     const removeItemOnClick = (seq) => setQuestionState({
         ...questionState,
         questionItems: questionState.questionItems.filter(item => item.sequence !== seq)
     });
 
     const addItemOnClick = () => {
-        sequenceNum.current += 1;
         setQuestionState({
             ...questionState,
             questionItems: questionState.questionItems.concat({
                 sequence: sequenceNum.current,
-                text: "",
+                text: `보기 ${sequenceNum.current}`,
                 image: null
             })
         });
+        sequenceNum.current += 1;
     };
 
     const removeQuestionOnClick = () => {
         quizDispatch(removeQuestion(questionState.id));
-    }
+    };
 
     return (
-        <div className="question"
-            onBlur={() => quizDispatch(modifyQuestion(questionState))}>
+        <div className="question">
             <div className="remove-question" onClick={removeQuestionOnClick}>
                 <FaTimes/>
             </div>
@@ -112,8 +120,8 @@ function CreateQuizQuestion({ question }) {
                 (questionState.type === "주관식")
                 ? (
                     <input type="text" className="question-subjective-answer"
-                           onChange={placeholderOnChange}
-                           value={questionState.placeholder}
+                           onChange={answerOnChange}
+                           value={questionState.answer}
                            placeholder="주관식 문제의 정답을 입력하세요."
                     />
                 )
@@ -123,7 +131,9 @@ function CreateQuizQuestion({ question }) {
                             <CreateQuizQuestionItem removeItem={removeItemOnClick}
                                                     textOnChange={itemTextOnChange}
                                                     imageOnChange={itemImageOnChange}
-                                                    item={item} key={item.sequence}/>
+                                                    answerOnClick={itemAnswerOnClick}
+                                                    item={item} answer={questionState.answer}
+                                                    key={item.sequence}/>
                         ))}
                         <div className="add-question-item" onClick={addItemOnClick}>
                             <GrRadial/>

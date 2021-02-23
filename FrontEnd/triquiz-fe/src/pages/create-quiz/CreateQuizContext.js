@@ -15,14 +15,8 @@ const initialQuizContents = {
             hint: "",
             type: "객관식",
             image: null,
-            placeholder: "",
-            questionItems: [
-                {
-                    sequence: 0,
-                    text: "보기 1",
-                    image: null
-                }
-            ]
+            answer: "",
+            questionItems: []
         }
     ]
 };
@@ -54,7 +48,7 @@ const quizContentsReducer = (state, action) => {
                 private: contents.private,
                 authorId: contents.authorId,
                 password: contents.password
-            }
+            };
         case 'ADD_EMPTY_QUESTION':
             questionId.current += 1;
             return {
@@ -66,9 +60,10 @@ const quizContentsReducer = (state, action) => {
                     type: "",
                     image: "",
                     placeholder: "",
-                    questionItems: []
+                    questionItems: [],
+                    answer: null
                 })
-            }
+            };
         case 'MODIFY_QUESTION':
             const modifiedQuestion = action.question;
             return {

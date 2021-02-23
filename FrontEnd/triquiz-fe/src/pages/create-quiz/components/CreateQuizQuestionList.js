@@ -11,7 +11,7 @@ function CreateQuizQuestionList() {
 
     useEffect(() => {
         questionListEnd.current.scrollIntoView({behavior: "smooth"});
-    }, [quizState.questions]);
+    }, [quizState.questions.length]);
 
     const addQuestionOnClick = () => quizDispatch(addEmptyQuestion());
 

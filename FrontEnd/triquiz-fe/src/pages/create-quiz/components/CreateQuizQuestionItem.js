@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {IoMdRemoveCircleOutline, GrRadial, GrRadialSelected, BsImage} from "react-icons/all";
 import "./QuizQuestionItem.css";
 
-function CreateQuizQuestionItem({ removeItem, textOnChange, imageOnChange, item }) {
+function CreateQuizQuestionItem({ removeItem, textOnChange, imageOnChange, answerOnClick, item, answer }) {
     return (
         <div className="question-item">
-            <div className="item-radial">
-                <GrRadial/>
+            <div className="item-radial" onClick={() => answerOnClick(item.text)}>
+                {
+                    (item.text === answer) ? (<GrRadialSelected/>) : (<GrRadial/>)
+                }
             </div>
             <input className="item-text" type="text" value={item.text}
                    onChange={e => textOnChange(item.sequence, e.target.value)}/>

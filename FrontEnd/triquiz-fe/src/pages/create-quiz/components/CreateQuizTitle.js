@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {GrLock, GrUnlock} from "react-icons/all";
 import {useCreateQuizDispatch, setTitleContents} from "../CreateQuizContext";
 import {BsImage} from "react-icons/all";
@@ -6,7 +6,7 @@ import "./QuizTitle.css";
 
 function CreateQuizTitle() {
     const quizDispatch = useCreateQuizDispatch();
-    const [state, setState] = useState({
+    const [titleState, setTitleState] = useState({
         title: "",
         description: "",
         thumbnailImage: "",
@@ -14,16 +14,20 @@ function CreateQuizTitle() {
         authorId: "",
         password: "",
     });
+
+    useEffect(() => {
+        quizDispatch(setTitleContents(titleState));
+    }, [titleState]);
+
     return (
-        <div className="quiz-title"
-             onBlur={() => quizDispatch(setTitleContents(state))}>
+        <div className="quiz-title">
             <input type="text" className="text-input" placeholder="제목 없는 퀴즈"
-                   onChange={e => setState({...state, title: e.target.value})}
-                   value={state.title}
+                   onChange={e => setTitleState({...titleState, title: e.target.value})}
+                   value={titleState.title}
             />
             <textarea rows="4" className="description-input" placeholder="퀴즈 설명"
-                   onChange={e => setState({...state, description: e.target.value})}
-                   value={state.description}
+                   onChange={e => setTitleState({...titleState, description: e.target.value})}
+                   value={titleState.description}
             />
             <div className="image-input">
                 <label htmlFor="imageInput">
@@ -33,16 +37,16 @@ function CreateQuizTitle() {
                     </span>
                 </label>
                 <input type="file" hidden id="imageInput"
-                       onChange={e => setState({...state, thumbnailImage: e.target.value})}
+                       onChange={e => setTitleState({...titleState, thumbnailImage: e.target.value})}
                 />
             </div>
             <div className="password-div">
-                { (state.private) ? (<GrLock/>) : (<GrUnlock/>) }
+                { (titleState.private) ? (<GrLock/>) : (<GrUnlock/>) }
                 <input type="password" className="password-input"
                        onChange={e => (e.target.value.length > 0)
-                           ? setState({...state, private: true, password: e.target.value})
-                           : setState({...state, private: false, password: e.target.value})}
-                       value={state.password}
+                           ? setTitleState({...titleState, private: true, password: e.target.value})
+                           : setTitleState({...titleState, private: false, password: e.target.value})}
+                       value={titleState.password}
                 />
             </div>
         </div>
