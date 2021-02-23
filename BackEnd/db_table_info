@@ -1,0 +1,75 @@
+--
+-- run mysql
+--
+
+$ mysql -u root -p
+(password 입력)
+
+CREATE DATABASE triQuiz;
+USE triQuiz;
+
+--
+-- Table structure for table `quizzes`
+--
+
+CREATE TABLE quizzes(
+quizId BIGINT NOT NULL AUTO_INCREMENT,
+title VARCHAR(100),
+description VARCHAR(3000),
+thumbnailImage VARCHAR(1000),
+private BOOLEAN NOT NULL DEFAULT FALSE,
+authorId VARCHAR(100) NOT NULL,
+password VARCHAR(100),
+participation BIGINT DEFAULT 0,
+createDatetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updaetDatetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+PRIMARY KEY(quizId)
+);
+
+--
+-- Dumping data for table `quizzes`
+--
+
+INSERT INTO `quizzes` VALUES (...);
+
+--
+-- Table structure for table `questions`
+--
+
+CREATE TABLE questions(
+questionId BIGINT NOT NULL AUTO_INCREMENT,
+quizId BIGINT NOT NULL,
+title VARCHAR(1000) NOT NULL,
+hint VARCHAR(3000),
+type TINYINT NOT NULL,
+image VARCHAR(1000),
+placeholder VARCHAR(1000),
+careteTime DATETIME DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY(questionId)
+);
+
+--
+-- Dumping data for table `questions`
+--
+
+INSERT INTO `questions` VALUES (...);
+
+--
+-- Table structure for table `questionItems`
+--
+
+CREATE TABLE questionItems(
+questionItemId BIGINT NOT NULL AUTO_INCREMENT,
+quizId BIGINT NOT NULL,
+sequence INT NOT NULL,
+text VARCHAR(300),
+image VARCHAR(1000),
+PRIMARY KEY(questionItemId)
+);
+
+--
+-- Dumping data for table `questionItems`
+--
+
+INSERT INTO `questionItems` VALUES (...);
