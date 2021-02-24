@@ -9,21 +9,21 @@ import {
   Query,
 } from '@nestjs/common';
 import { QuizService } from './quiz.service';
-import { Quiz } from './entities/quiz.entities'
+import { Quiz } from './entities/quiz.entities';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 
 @Controller('quiz')
 export class QuizController {
-  constructor(readonly quizService: QuizService) {} // NOTE: service 에 접근하기 위해서 생성자에서 요청해야 함.
+  constructor(readonly quizService: QuizService) {} // NOTE: service 에 접근하기 위해서 생성자에 quizService 라는 Property 를 요청?해야 함.
 
   @Get()
-  getAll(): Quiz[]{
+  getAll(): Quiz[] {
     return this.quizService.getAll();
   }
 
   @Get('/:id')
-  getOne(@Param('id') quizId: number): Quiz{
+  getOne(@Param('id') quizId: number): Quiz {
     console.log(typeof quizId);
     return this.quizService.getOne(quizId);
   }
