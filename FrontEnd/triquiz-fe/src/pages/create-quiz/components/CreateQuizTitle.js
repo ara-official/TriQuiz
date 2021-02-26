@@ -9,15 +9,27 @@ function CreateQuizTitle() {
     const [titleState, setTitleState] = useState({
         title: "",
         description: "",
-        thumbnailImage: "",
+        thumbnailImage: null,
         private: false,
         authorId: "",
         password: "",
     });
+    const [titleImagePreview, setTitleImagePreview] = useState("");
 
     useEffect(() => {
         quizDispatch(setTitleContents(titleState));
     }, [titleState, quizDispatch]);
+
+    const titleImageOnChange = e => {
+        setTitleState({...titleState, thumbnailImage: e.target.files[0] || null});
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setTitleImagePreview(reader.result);
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    }
 
     return (
         <div className="quiz-title">
@@ -30,14 +42,16 @@ function CreateQuizTitle() {
                    value={titleState.description}
             />
             <div className="image-input">
-                <label htmlFor="imageInput">
+                <label htmlFor="titleImageInput">
                     <BsImage/>
-                    <span>
-                        썸네일 이미지를 등록하세요.(필수 아님)
-                    </span>
+                    {
+                        (titleState.thumbnailImage)
+                        ? (<img src={titleImagePreview} className="title-image-preview"/>)
+                        : (<span>썸네일 이미지를 등록하세요.(필수 아님)</span>)
+                    }
                 </label>
-                <input type="file" hidden id="imageInput"
-                       onChange={e => setTitleState({...titleState, thumbnailImage: e.target.value})}
+                <input type="file" hidden id="titleImageInput"
+                       onChange={titleImageOnChange}
                 />
             </div>
             <div className="password-div">

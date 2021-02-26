@@ -9,8 +9,8 @@ import "./QuizPage.css";
 function CreateQuizPage() {
     return (
         <CreateQuizContext>
+            <CreateQuizHeader/>
             <div className="container">
-                <CreateQuizHeader/>
                 <CreateQuizTitle/>
                 <CreateQuizQuestionList/>
                 <CreateQuizToolBox/>

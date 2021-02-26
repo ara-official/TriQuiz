@@ -27,11 +27,18 @@
 .image-input > label {
     cursor: pointer;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+}
+.title-image-preview {
+    min-width: 15rem;
+    width: 80%;
+    max-width: 30rem;
+    margin-left: 1rem;
 }
 .image-input span {
     margin-left: 0.5rem;
     font-size: 0.8rem;
+    line-height: 1.5rem;
 }
 .password-div {
     margin: 1.2rem;

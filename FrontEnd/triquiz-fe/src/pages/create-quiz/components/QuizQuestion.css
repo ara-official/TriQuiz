@@ -51,6 +51,18 @@
 .question-image-input > label {
     cursor: pointer;
 }
+.question-image-preview-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.question-image-preview {
+    min-width: 15rem;
+    width: 80%;
+    max-width: 30rem;
+    height: auto;
+}
 .question-select-input {
     margin: 0.5rem 1.2rem 0.5rem 1.2rem;
     width: 20%;
@@ -61,7 +73,7 @@
     font-size: 1rem;
     border: none;
     border-bottom: solid 0.2rem black;
-    margin: 1.2rem 1.2rem 0rem 1.2rem;
+    margin: 0rem 1.2rem 0rem 1.2rem;
     outline: none;
     resize: none;
     padding: 1rem;

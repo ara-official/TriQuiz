@@ -58,7 +58,7 @@ const quizContentsReducer = (state, action) => {
                     title: "",
                     hint: "",
                     type: "",
-                    image: "",
+                    image: null,
                     placeholder: "",
                     questionItems: [],
                     answer: null

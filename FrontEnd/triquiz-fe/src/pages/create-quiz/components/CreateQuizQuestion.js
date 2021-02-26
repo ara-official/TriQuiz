@@ -8,6 +8,7 @@ function CreateQuizQuestion({ question }) {
     const [questionState, setQuestionState] = useState(question);
     const quizDispatch = useCreateQuizDispatch();
     const sequenceNum = useRef(1);
+    const [previewImage, setPreviewImage] = useState(null);
 
     useEffect(() => {
         quizDispatch(modifyQuestion(questionState));
@@ -28,10 +29,19 @@ function CreateQuizQuestion({ question }) {
         type: e.target.value
     });
 
-    const imageOnChange = e => setQuestionState({
-        ...questionState,
-        image: e.target.value
-    });
+    const imageOnChange = e => {
+        setQuestionState({
+            ...questionState,
+            image: e.target.files[0] || null
+        });
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onloadend = e => {
+                setPreviewImage(reader.result);
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    };
 
     const answerOnChange = e => setQuestionState({
         ...questionState,
@@ -88,6 +98,7 @@ function CreateQuizQuestion({ question }) {
         quizDispatch(removeQuestion(questionState.id));
     };
 
+    const labelId = Math.round(Math.random() * 100000);
     return (
         <div className="question" draggable={true}>
             <div className="controll-bar">
@@ -105,10 +116,10 @@ function CreateQuizQuestion({ question }) {
                        placeholder="문제를 입력하세요."
                 />
                 <div className="question-image-input">
-                    <label htmlFor="imageInput">
+                    <label htmlFor={`image-input-${labelId}`}>
                         <BsImage/>
                     </label>
-                    <input type="file" onChange={imageOnChange} id="imageInput" hidden/>
+                    <input type="file" onChange={imageOnChange} id={`image-input-${labelId}`} hidden/>
                 </div>
                 <select className="question-select-input"
                     onChange={typeOnChange} value={questionState.type}>
@@ -116,6 +127,13 @@ function CreateQuizQuestion({ question }) {
                     <option value="주관식">주관식 질문</option>
                 </select>
             </div>
+            {
+                (questionState.image)
+                ? (<div className="question-image-preview-div">
+                        <img src={previewImage} className="question-image-preview"/>
+                </div>)
+                : null
+            }
             <textarea className="question-hint-input"
                       rows="3" onChange={hintOnChange}
                       value={questionState.hint}

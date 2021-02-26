@@ -26,3 +26,9 @@
     font-size: 1.3rem;
     color: #333333;
 }
+.question-item-preview {
+    min-width: 10rem;
+    width: 50%;
+    max-width: 20rem;
+    margin-left: 3rem;
+}

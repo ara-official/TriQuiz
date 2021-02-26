@@ -1,25 +1,36 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useCreateQuizState} from "../CreateQuizContext";
-import axios from "axios";
 import "./CreateQuizHeader.css";
+import {createQuiz, uploadImage} from "../../../api/triQuizAPI";
 
 function CreateQuizHeader() {
     const quizState = useCreateQuizState();
 
-    const createOnClick = e => {
-        e.preventDefault();
-        axios({
-            method: "POST",
-            url: "http://172.30.1.46:8000/quiz",
-            contentType: "json/application",
-            dataType: "json",
-            data: quizState
-        }).then(response => {
-            console.log(response);
-        }).catch(error => {
-            console.log(error);
-        });
+    const convertFile2Url = async () => {
+        const quizData = quizState;
+        if (quizData.thumbnailImage) {
+            quizData.thumbnailImage = await uploadImage(quizData.thumbnailImage);
+        }
+        for (let question of quizData.questions) {
+            if (question.image) {
+                question.image = await uploadImage(question.image);
+            }
+            for (let item of question.questionItems) {
+                if (item.image) {
+                    item.image = await uploadImage(item.image);
+                }
+            }
+        }
+        return quizData
     };
+
+    const createOnClick = useCallback(e => {
+        e.preventDefault();
+        convertFile2Url()
+            .then(quizData => createQuiz(quizData))
+            .then(console.log)
+            .catch(console.log);
+    }, [quizState]);
 
     const gotoListOnClick = e => {
         e.preventDefault();
