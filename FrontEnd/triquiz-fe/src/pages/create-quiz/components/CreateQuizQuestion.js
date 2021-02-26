@@ -11,7 +11,7 @@ function CreateQuizQuestion({ question }) {
 
     useEffect(() => {
         quizDispatch(modifyQuestion(questionState));
-    }, [questionState]);
+    }, [questionState, quizDispatch]);
 
     const titleOnChange = e => setQuestionState({
         ...questionState,

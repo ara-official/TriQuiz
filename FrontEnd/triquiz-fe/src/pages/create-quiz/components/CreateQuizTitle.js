@@ -17,7 +17,7 @@ function CreateQuizTitle() {
 
     useEffect(() => {
         quizDispatch(setTitleContents(titleState));
-    }, [titleState]);
+    }, [titleState, quizDispatch]);
 
     return (
         <div className="quiz-title">
