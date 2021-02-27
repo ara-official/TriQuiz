@@ -36,5 +36,5 @@ export class Question {
     (type) => QuestionItem,
     (questionItem) => questionItem.questionItemId,
   )
-  questionItems: QuestionItem[];
+  questionItems: Array<QuestionItem>;
 }

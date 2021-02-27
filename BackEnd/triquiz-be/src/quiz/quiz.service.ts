@@ -10,7 +10,6 @@ import { QuestionItem } from './entities/questionItem.entities';
 
 @Injectable()
 export class QuizService {
-  // private quizzes: Quiz[] = [];
   constructor(
     @InjectRepository(Quiz)
     private quizRepository: Repository<Quiz>,
@@ -22,40 +21,66 @@ export class QuizService {
   ) {}
 
   getAll(): Promise<Quiz[]> {
-    // return this.quizzes;
     return this.quizRepository.find();
   }
 
-  getOne(quizId: number): Promise<Quiz> {
-    // const quiz = this.quizzes.find((quiz) => quiz.id === quizId); // NOTE: find 함수는 특정 조건에 부합하는 배열의 첫 번째 값을 리턴
-    // if (!quiz) {
-    //   throw new NotFoundException(`Quiz with ID ${quizId} not found`);
-    // }
-    // return quiz;
-    return this.quizRepository.findOne(quizId);
+  async getOne(quizId: number): Promise<Quiz> {
+    let quiz = await this.quizRepository.findOne(quizId);
+    if (quiz === undefined) {
+      throw new NotFoundException(`Quiz with ID ${quizId} not found`);
+    }
+
+    let questions = (await this.questionRepository.find()).filter(
+      (question) => question.quizId === quizId,
+    );
+    if (questions === undefined) {
+      return quiz;
+    }
+
+    let questionItems = (await this.questionItemRepository.find()).filter(
+      (questionItem) => questionItem.quizId === quizId,
+    );
+
+    if (questionItems !== undefined) {
+      for (let i = 0; i < questions.length; i++) {
+        let questionItem = questionItems.filter(
+          (questionItem) => questionItem.questionId === questions[i].questionId,
+        );
+        questions[i].questionItems = questionItem;
+      }
+    }
+    quiz.questions = questions;
+
+    return quiz;
   }
 
-  deleteOne(quizId: number) {
+  async deleteOne(quizId: number) {
     this.getOne(quizId); // NOTE: Error return
-    // this.quizzes = this.quizzes.filter((quiz) => quiz.id !== quizId); // NOTE: filter 함수는 특정 조건에 부합하는 배열의 모든 값을 배열 형태로 리턴
-    this.quizRepository.delete(quizId);
+
+    let questionItems = (await this.questionItemRepository.find()).filter(
+      (questionItem) => questionItem.quizId === quizId,
+    );
+    if (questionItems !== undefined) {
+      for (let i = 0; i < questionItems.length; i++) {
+        await this.questionItemRepository.delete(
+          questionItems[i].questionItemId,
+        );
+      }
+    }
+
+    let questions = (await this.questionRepository.find()).filter(
+      (question) => question.quizId === quizId,
+    );
+    if (questions !== undefined) {
+      for (let i = 0; i < questions.length; i++) {
+        await this.questionRepository.delete(questions[i].questionId);
+      }
+    }
+
+    await this.quizRepository.delete(quizId);
   }
 
   async create(quizData: CreateQuizDto): Promise<Quiz> {
-    console.log(quizData);
-    // this.quizzes.push({
-    //   id: this.quizzes.length + 1,
-    //   ...quizData,
-    //   // title: quizData.title,
-    //   // description: quizData.description,
-    //   // thumbnail_image: quizData.thumbnail_image,
-    //   // private: quizData.private,
-    //   // author_id: quizData.author_id,
-    //   // password: quizData.password,
-    //   // questions: quizData.questions
-    // });
-    // this.quizRepository.create(quizData);
-
     let quiz = new Quiz();
     quiz.title = quizData.title;
     quiz.description = quizData.description;
@@ -64,34 +89,40 @@ export class QuizService {
     quiz.authorId = quizData.authorId;
     quiz.password = quizData.password;
     const retQuiz = this.quizRepository.save(quiz);
-    if (quizData.questions !== undefined) {
-      quiz.questions = new Array<Question>();
-      for (var i = 0; i < quizData.questions.length; i++) {
-        let qq = new Question();
-        qq.quizId = (await retQuiz).quizId;
-        qq.title = quizData.questions[i].title;
-        qq.hint = quizData.questions[i].hint;
-        qq.type = quizData.questions[i].type;
-        qq.img = quizData.questions[i].image;
-        qq.answer = quizData.questions[i].answer;
-        const retQuestion = this.questionRepository.save(qq);
 
-        if (quizData.questions[i].questionItems !== undefined) {
-          qq.questionItems = Array<QuestionItem>();
-          for (var j = 0; j < quizData.questions[i].questionItems.length; j++) {
-            const ii = new QuestionItem();
-            ii.quizId = (await retQuiz).quizId;
-            ii.questionId = (await retQuestion).questionId;
-            ii.sequence = quizData.questions[i].questionItems[j].sequence;
-            ii.text = quizData.questions[i].questionItems[j].text;
-            ii.img = quizData.questions[i].questionItems[j].image;
-            qq.questionItems.push(ii); // for DBG
-            this.questionItemRepository.save(ii);
-          }
-        }
+    if (quizData.questions === undefined) {
+      return quiz;
+    }
 
+    quiz.questions = new Array<Question>();
+    for (var i = 0; i < quizData.questions.length; i++) {
+      let qq = new Question();
+      qq.quizId = (await retQuiz).quizId;
+      qq.title = quizData.questions[i].title;
+      qq.hint = quizData.questions[i].hint;
+      qq.type = quizData.questions[i].type;
+      qq.img = quizData.questions[i].image;
+      qq.answer = quizData.questions[i].answer;
+      const retQuestion = this.questionRepository.save(qq);
+
+      if (quizData.questions[i].questionItems === undefined) {
         quiz.questions.push(qq); // for DBG
+        continue;
       }
+
+      qq.questionItems = Array<QuestionItem>();
+      for (var j = 0; j < quizData.questions[i].questionItems.length; j++) {
+        const ii = new QuestionItem();
+        ii.quizId = (await retQuiz).quizId;
+        ii.questionId = (await retQuestion).questionId;
+        ii.sequence = quizData.questions[i].questionItems[j].sequence;
+        ii.text = quizData.questions[i].questionItems[j].text;
+        ii.img = quizData.questions[i].questionItems[j].image;
+        qq.questionItems.push(ii); // for DBG
+        this.questionItemRepository.save(ii);
+      }
+
+      quiz.questions.push(qq); // for DBG
     }
 
     // return this.quizRepository.create(quiz);

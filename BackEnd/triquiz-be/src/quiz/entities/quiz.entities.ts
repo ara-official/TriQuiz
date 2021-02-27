@@ -34,30 +34,5 @@ export class Quiz {
   @CreateDateColumn()
   updateDatetime: Date;
   @OneToMany((type) => Question, (question) => question.questionId)
-  questions: Question[];
+  questions: Array<Question>;
 }
-
-// export class Quiz {
-//   id: number;
-//   title: string;
-//   description: string;
-//   thumbnailImage: string;
-//   private: boolean;
-//   authorId: string;
-//   password: string;
-//   questions: [Question];
-// }
-
-// class Question {
-//   title: string;
-//   hint: string;
-//   type: string;
-//   image: string;
-//   answer: string;
-//   questionItems: [QuestionItem];
-// }
-// class QuestionItem {
-//   sequence: number;
-//   text: string;
-//   image: string;
-// }

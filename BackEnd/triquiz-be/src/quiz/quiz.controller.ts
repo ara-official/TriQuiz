@@ -24,7 +24,7 @@ export class QuizController {
 
   @Get('/:id')
   getOne(@Param('id') quizId: number): Promise<Quiz> {
-    console.log(typeof quizId);
+    // console.log(typeof quizId);
     return this.quizService.getOne(quizId);
   }
 
