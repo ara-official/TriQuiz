@@ -18,18 +18,18 @@ export class QuizController {
   constructor(readonly quizService: QuizService) {} // NOTE: service 에 접근하기 위해서 생성자에 quizService 라는 Property 를 요청?해야 함.
 
   @Get()
-  getAll(): Quiz[] {
+  getAll(): Promise<Quiz[]> {
     return this.quizService.getAll();
   }
 
   @Get('/:id')
-  getOne(@Param('id') quizId: number): Quiz {
+  getOne(@Param('id') quizId: number): Promise<Quiz> {
     console.log(typeof quizId);
     return this.quizService.getOne(quizId);
   }
 
   @Post()
-  create(@Body() quizData: CreateQuizDto) {
+  create(@Body() quizData: CreateQuizDto): Promise<Quiz> {
     console.log(quizData);
     return this.quizService.create(quizData);
   }
