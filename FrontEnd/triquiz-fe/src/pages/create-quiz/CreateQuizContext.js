@@ -4,7 +4,7 @@ let questionId;
 const initialQuizContents = {
     title: "",
     description: "",
-    thumbnailImage: null,
+    thumbnailImage: "",
     private: false,
     authorId: "",
     password: "",
@@ -14,7 +14,7 @@ const initialQuizContents = {
             title: "",
             hint: "",
             type: "객관식",
-            image: null,
+            image: "",
             answer: "",
             questionItems: []
         }
@@ -58,7 +58,7 @@ const quizContentsReducer = (state, action) => {
                     title: "",
                     hint: "",
                     type: "",
-                    image: null,
+                    image: "",
                     placeholder: "",
                     questionItems: [],
                     answer: null

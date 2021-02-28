@@ -3,7 +3,7 @@ import axios from "axios";
 export const createQuiz = (quizData) => new Promise((resolve, reject) => {
     axios({
         method: "POST",
-        url: "http://172.30.1.46:8000/quiz",
+        url: "http://192.168.25.4:8000/quiz",
         contentType: "json/application",
         dataType: "json",
         data: quizData

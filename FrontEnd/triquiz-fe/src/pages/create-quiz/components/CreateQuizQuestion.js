@@ -32,7 +32,7 @@ function CreateQuizQuestion({ question }) {
     const imageOnChange = e => {
         setQuestionState({
             ...questionState,
-            image: e.target.files[0] || null
+            image: e.target.files[0] || ""
         });
         if (e.target.files[0]) {
             const reader = new FileReader();
@@ -88,7 +88,7 @@ function CreateQuizQuestion({ question }) {
             questionItems: questionState.questionItems.concat({
                 sequence: sequenceNum.current,
                 text: `보기 ${sequenceNum.current}`,
-                image: null
+                image: ""
             })
         });
         sequenceNum.current += 1;

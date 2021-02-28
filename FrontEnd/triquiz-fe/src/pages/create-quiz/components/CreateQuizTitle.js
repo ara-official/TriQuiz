@@ -9,7 +9,7 @@ function CreateQuizTitle() {
     const [titleState, setTitleState] = useState({
         title: "",
         description: "",
-        thumbnailImage: null,
+        thumbnailImage: "",
         private: false,
         authorId: "",
         password: "",
@@ -21,7 +21,7 @@ function CreateQuizTitle() {
     }, [titleState, quizDispatch]);
 
     const titleImageOnChange = e => {
-        setTitleState({...titleState, thumbnailImage: e.target.files[0] || null});
+        setTitleState({...titleState, thumbnailImage: e.target.files[0] || ""});
         if (e.target.files[0]) {
             const reader = new FileReader();
             reader.onloadend = () => {
