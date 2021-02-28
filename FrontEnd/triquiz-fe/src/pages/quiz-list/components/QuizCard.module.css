@@ -1,0 +1,75 @@
+.Card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #666666;
+    margin: 0.5rem 1rem;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 0.5rem;
+}
+.Title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    height: 15%;
+}
+.Image {
+    margin: 0.5rem;
+    height: 65%;
+    text-align: center;
+}
+.ImageSrc {
+    width: auto;
+    max-width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
+}
+.Footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 20%;
+}
+.Buttons {
+
+}
+.ParticipateButton, .StatisticsButton {
+    width: 4.5rem;
+    height: 2rem;
+    margin: 0.2rem;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    padding: 0;
+}
+.ParticipateButton {
+    border-color: green;
+    color: green;
+}
+.ParticipateButton:hover {
+    background-color: green;
+    color: white;
+}
+.StatisticsButton {
+    border-color: blue;
+    color: blue;
+}
+.StatisticsButton:hover {
+    background-color: blue;
+    color: white
+}
+.Author {
+    margin-left: 0.5rem;
+}
+.QuestionNum {
+    margin-left: 0.5rem;
+}
+.ParticipationNum {
+    margin-left: 0.5rem;
+}
+.LikeNum {
+    margin-left: 0.3rem;
+}

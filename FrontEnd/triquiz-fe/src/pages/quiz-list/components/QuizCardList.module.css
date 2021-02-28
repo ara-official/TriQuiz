@@ -1,0 +1,10 @@
+.CardListContainer {
+    margin-top: 3.5rem;
+    width: fit-content;
+}
+.CardList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: auto;
+}

@@ -34,7 +34,7 @@ function CreateQuizHeader() {
 
     const gotoListOnClick = e => {
         e.preventDefault();
-        window.location.href = "/";
+        window.location.href = "/quiz-list";
     };
 
     return (
