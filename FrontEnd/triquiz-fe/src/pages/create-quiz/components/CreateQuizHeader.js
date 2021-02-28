@@ -29,7 +29,7 @@ function CreateQuizHeader() {
         convertFile2Url()
             .then(quizData => createQuiz(quizData))
             .then(console.log)
-            .catch(console.log);
+            .catch(e => window.alert(e.response.data.message[0]));
     }, [quizState]);
 
     const gotoListOnClick = e => {
