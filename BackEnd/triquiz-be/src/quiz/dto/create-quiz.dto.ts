@@ -1,33 +1,36 @@
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'; // NOTE: [참고] https://github.com/typestack/class-validator
 
+function errorMsg(field: string) {
+  return `유효하지 않은 ${field} 입니다.`;
+}
 export class CreateQuizDto {
-  @IsString()
+  @IsString({ message: errorMsg('title') })
   readonly title: string;
-  @IsString()
+  @IsString({ message: errorMsg('description') })
   readonly description: string;
-  @IsString()
+  @IsString({ message: errorMsg('thumbnailImage') })
   readonly thumbnailImage: string;
-  @IsBoolean()
+  @IsBoolean({ message: errorMsg('private') })
   readonly private: boolean;
-  @IsString()
+  @IsString({ message: errorMsg('authorId') })
   readonly authorId: string;
-  @IsString()
+  @IsString({ message: errorMsg('password') })
   readonly password: string;
   @IsOptional()
   readonly questions: Array<QuestionDto>;
 }
 
 export class QuestionDto {
-  @IsString()
+  @IsString({ message: errorMsg('title') })
   readonly title: string;
-  @IsString()
+  @IsString({ message: errorMsg('hint') })
   readonly hint: string;
-  @IsString()
+  @IsString({ message: errorMsg('type') })
   readonly type: string;
   @IsOptional()
-  @IsString()
+  @IsString({ message: errorMsg('image') })
   readonly image: string;
-  @IsString()
+  @IsString({ message: errorMsg('answer') })
   readonly answer: string;
   @IsOptional()
   readonly questionItems: Array<QuestionItemDto>;
@@ -36,9 +39,9 @@ export class QuestionDto {
 export class QuestionItemDto {
   @IsNumber()
   readonly sequence: number;
-  @IsString()
+  @IsString({ message: errorMsg('text') })
   readonly text: string;
   @IsOptional()
-  @IsString()
+  @IsString({ message: errorMsg('image') })
   readonly image: string;
 }
