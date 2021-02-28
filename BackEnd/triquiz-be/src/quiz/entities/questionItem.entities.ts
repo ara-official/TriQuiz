@@ -1,17 +1,25 @@
 import { IsOptional } from 'class-validator';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  PrimaryColumn,
+  Generated,
+} from 'typeorm';
 import { Question } from './question.entities';
 import { Quiz } from './quiz.entities';
 
 @Entity()
 export class QuestionItem {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ type: 'bigint' })
+  @Generated('increment')
   questionItemId: number;
   @OneToOne((type) => Quiz, (quiz) => quiz.quizId)
-  @Column()
+  @Column({ type: 'bigint' })
   quizId: number;
   @OneToOne((type) => Question, (question) => question.questionId)
-  @Column()
+  @Column({ type: 'bigint' })
   questionId: number;
   @Column()
   sequence: number;

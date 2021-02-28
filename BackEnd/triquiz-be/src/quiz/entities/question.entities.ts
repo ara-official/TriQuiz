@@ -1,10 +1,11 @@
-import { IsOptional } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  Generated,
   OneToMany,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { QuestionItem } from './questionItem.entities';
@@ -13,14 +14,15 @@ import { Quiz } from './quiz.entities';
 @Entity()
 export class Question {
   // @PrimaryGeneratedColumn({ name: 'questionId' })
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ type: 'bigint' })
+  @Generated('increment')
   questionId: number;
   @OneToOne((type) => Quiz, (quiz) => quiz.quizId)
-  @Column()
+  @Column({ type: 'bigint' })
   quizId: number;
   @Column()
   title: string;
-  @Column()
+  @Column({ default: '' })
   hint: string;
   @Column()
   type: string;

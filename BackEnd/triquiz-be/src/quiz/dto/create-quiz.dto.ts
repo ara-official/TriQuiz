@@ -17,16 +17,6 @@ export class CreateQuizDto {
   readonly questions: Array<QuestionDto>;
 }
 
-export class QuestionItemDto {
-  @IsNumber()
-  readonly sequence: number;
-  @IsString()
-  readonly text: string;
-  @IsOptional()
-  @IsString()
-  readonly image: string;
-}
-
 export class QuestionDto {
   @IsString()
   readonly title: string;
@@ -41,4 +31,14 @@ export class QuestionDto {
   readonly answer: string;
   @IsOptional()
   readonly questionItems: Array<QuestionItemDto>;
+}
+
+export class QuestionItemDto {
+  @IsNumber()
+  readonly sequence: number;
+  @IsString()
+  readonly text: string;
+  @IsOptional()
+  @IsString()
+  readonly image: string;
 }

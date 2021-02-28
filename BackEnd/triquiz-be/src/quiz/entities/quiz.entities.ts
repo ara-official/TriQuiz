@@ -7,15 +7,18 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
+  PrimaryColumn,
+  Generated,
 } from 'typeorm';
 import { Question } from './question.entities';
 
 @Entity()
 export class Quiz {
   // @PrimaryGeneratedColumn({ name: 'quizId' })
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ type: 'bigint' })
+  @Generated('increment')
   quizId: number;
-  @Column({ length: 100 })
+  @Column('varchar', { length: 100 })
   title: string;
   @Column({ length: 3000 })
   description: string;
