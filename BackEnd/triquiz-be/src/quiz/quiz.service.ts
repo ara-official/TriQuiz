@@ -2,9 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Connection } from 'typeorm';
 import { Quiz } from './entities/quiz.entities';
-import { Connection } from 'typeorm';
 import { Question } from './entities/question.entities';
 import { QuestionItem } from './entities/questionItem.entities';
 
@@ -16,8 +15,7 @@ export class QuizService {
     @InjectRepository(Question)
     private questionRepository: Repository<Question>,
     @InjectRepository(QuestionItem)
-    private questionItemRepository: Repository<QuestionItem>,
-    private connection: Connection,
+    private questionItemRepository: Repository<QuestionItem>, // private connection: Connection,
   ) {}
 
   getAll(): Promise<Quiz[]> {

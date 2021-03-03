@@ -45,3 +45,11 @@ REST Client. End Point Test Tool.
 ## 1 install
 - https://insomnia.rest/
 - Insomnia Core 다운로드
+
+# test
+- [jest](https://jestjs.io/): npm package for javascript test
+- .spec.tx 파일은 test 를 포함한 파일 임
+## unit test
+function 단위 test
+## e2e test
+사용자 관점에서 test

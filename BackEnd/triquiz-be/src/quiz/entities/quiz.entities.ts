@@ -31,7 +31,11 @@ export class Quiz {
   @Column({ length: 100 })
   password: string;
   @Column({ default: 0 })
-  participation: number;
+  questionNum: number;
+  @Column({ default: 0 })
+  participationNum: number;
+  @Column({ default: 0 })
+  likeNum: number;
   @CreateDateColumn()
   createDatetime: Date;
   @CreateDateColumn()
