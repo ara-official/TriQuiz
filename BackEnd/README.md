@@ -13,13 +13,11 @@ $ nest new project-name
 ```shell
 $ sudo nest new project-name
 ```
-
 ## 2 run
 ```shell
 $ npm install
 $ npm start
 ```
-
 ## 3 command
 controller 생성
 ```shell
@@ -31,14 +29,12 @@ service 생성
 $ nest g s
 (service name)
 ```
-
 ## 4 database
 https://docs.nestjs.com/techniques/database
 
 ```shell
 $ npm install --save @nestjs/typeorm typeorm mysql2
 ```
-
 
 # Insomnia.rest
 REST Client. End Point Test Tool.
