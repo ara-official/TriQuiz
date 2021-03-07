@@ -27,7 +27,7 @@ export class Question {
   @Column()
   type: string;
   @Column({ default: '' })
-  img: string;
+  image: string;
   @Column()
   answer: string;
   @CreateDateColumn()

@@ -1,4 +1,11 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'; // NOTE: [참고] https://github.com/typestack/class-validator
+import {
+  IsBoolean,
+  IsDefined,
+  IsNumber,
+  IsOptional,
+  IsString,
+  isValidationOptions,
+} from 'class-validator'; // NOTE: [참고] https://github.com/typestack/class-validator
 
 function errorMsg(field: string) {
   return `유효하지 않은 ${field} 입니다.`;
@@ -16,6 +23,13 @@ export class CreateQuizDto {
   readonly authorId: string;
   @IsString({ message: errorMsg('password') })
   readonly password: string;
+
+  @IsNumber({}, { message: errorMsg('questionNum') })
+  readonly questionNum: number;
+  @IsNumber({}, { message: errorMsg('participationNum') })
+  readonly participationNum: number;
+  @IsNumber({}, { message: errorMsg('likeNum') })
+  readonly likeNum: number;
   @IsOptional()
   readonly questions: Array<QuestionDto>;
 }
@@ -37,7 +51,7 @@ export class QuestionDto {
 }
 
 export class QuestionItemDto {
-  @IsNumber()
+  @IsNumber({}, { message: errorMsg('sequence') })
   readonly sequence: number;
   @IsString({ message: errorMsg('text') })
   readonly text: string;

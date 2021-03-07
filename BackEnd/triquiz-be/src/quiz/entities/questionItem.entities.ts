@@ -26,5 +26,5 @@ export class QuestionItem {
   @Column()
   text: string;
   @Column({ default: '' })
-  img: string;
+  image: string;
 }

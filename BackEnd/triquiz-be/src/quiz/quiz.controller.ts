@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { QuizService } from './quiz.service';
 import { Quiz } from './entities/quiz.entities';
-import { CreateQuizDto } from './dto/create-quiz.dto';
+import { CreateQuizDto, QuestionDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 
 @Controller('quiz')
@@ -30,7 +30,7 @@ export class QuizController {
 
   @Post()
   create(@Body() quizData: CreateQuizDto): Promise<Quiz> {
-    console.log(quizData);
+    // console.log(quizData);
     return this.quizService.create(quizData);
   }
 

@@ -1,5 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateQuizDto } from './dto/create-quiz.dto';
+import {
+  CreateQuizDto,
+  QuestionDto,
+  QuestionItemDto,
+} from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Connection } from 'typeorm';
@@ -17,6 +21,87 @@ export class QuizService {
     @InjectRepository(QuestionItem)
     private questionItemRepository: Repository<QuestionItem>, // private connection: Connection,
   ) {}
+
+  // NOTE: DTO 에서 validation check 가 안되는 경우(null check)가 있어서, 아래 check 함수 3종을 추가했음.
+  checkValidQuizData(quizData: CreateQuizDto) {
+    if (
+      quizData.title === null ||
+      quizData.thumbnailImage === null ||
+      quizData.private === null ||
+      quizData.password === null ||
+      quizData.description === null ||
+      quizData.authorId === null
+    ) {
+      throw new NotFoundException(`quiz 의 멤버변수는 null 이 될 수 없습니다.`);
+    }
+    if (
+      typeof quizData.title !== 'string' ||
+      typeof quizData.thumbnailImage !== 'string' ||
+      typeof quizData.private !== 'boolean' ||
+      typeof quizData.password !== 'string' ||
+      typeof quizData.description !== 'string' ||
+      typeof quizData.authorId !== 'string'
+    ) {
+      throw new NotFoundException(`quiz 의 멤버변수는 null 이 될 수 없습니다.`);
+    }
+    if (quizData.questions === undefined) {
+      throw new NotFoundException(`Question not found`);
+    }
+    for (var i = 0; i < quizData.questions.length; i++) {
+      this.checkValidQuestionData(quizData.questions[i]);
+      if (quizData.questions[i].questionItems === undefined) {
+        continue;
+      }
+      for (var j = 0; j < quizData.questions[i].questionItems.length; j++) {
+        this.checkValidQuestionItemData(quizData.questions[i].questionItems[j]);
+      }
+    }
+  }
+  checkValidQuestionData(questionData: QuestionDto) {
+    console.log(questionData);
+    if (
+      questionData.title === null ||
+      questionData.hint === null ||
+      questionData.type === null ||
+      questionData.image === null ||
+      questionData.answer === null
+    ) {
+      throw new NotFoundException(
+        `Question 의 멤버 변수는 null 이 될 수 없습니다.`,
+      );
+    }
+    if (
+      typeof questionData.title !== 'string' ||
+      typeof questionData.hint !== 'string' ||
+      typeof questionData.type !== 'string' ||
+      typeof questionData.image !== 'string' ||
+      typeof questionData.answer !== 'string'
+    ) {
+      throw new NotFoundException(
+        `Question 의 멤버 변수는 null 이 될 수 없습니다.`,
+      );
+    }
+  }
+  checkValidQuestionItemData(questionItemData: QuestionItemDto) {
+    if (
+      questionItemData.text === null ||
+      questionItemData.sequence === null ||
+      questionItemData.image === null
+    ) {
+      throw new NotFoundException(
+        `QuestionItem 의 멤버 변수는 null 이 될 수 없습니다.`,
+      );
+    }
+    if (
+      typeof questionItemData.text !== 'string' ||
+      typeof questionItemData.sequence !== 'number' ||
+      typeof questionItemData.image !== 'string'
+    ) {
+      throw new NotFoundException(
+        `QuestionItem 의 멤버 변수의 type 이 잘 못 되었습니다.`,
+      );
+    }
+  }
 
   getAll(): Promise<Quiz[]> {
     return this.quizRepository.find();
@@ -53,7 +138,7 @@ export class QuizService {
   }
 
   async deleteOne(quizId: number) {
-    this.getOne(quizId); // NOTE: Error return
+    await this.getOne(quizId); // NOTE: Error return
 
     let questionItems = (await this.questionItemRepository.find()).filter(
       (questionItem) => questionItem.quizId === quizId,
@@ -79,14 +164,16 @@ export class QuizService {
   }
 
   async create(quizData: CreateQuizDto): Promise<Quiz> {
-    let quiz = new Quiz();
+    this.checkValidQuizData(quizData);
+
+    const quiz = new Quiz();
     quiz.title = quizData.title;
     quiz.description = quizData.description;
     quiz.thumbnailImage = quizData.thumbnailImage;
     quiz.private = quizData.private;
     quiz.authorId = quizData.authorId;
     quiz.password = quizData.password;
-    const retQuiz = this.quizRepository.save(quiz);
+    const retQuiz = await this.quizRepository.save(quiz);
 
     if (quizData.questions === undefined) {
       return quiz;
@@ -94,36 +181,35 @@ export class QuizService {
 
     quiz.questions = new Array<Question>();
     for (var i = 0; i < quizData.questions.length; i++) {
-      let qq = new Question();
-      qq.quizId = (await retQuiz).quizId;
-      qq.title = quizData.questions[i].title;
-      qq.hint = quizData.questions[i].hint;
-      qq.type = quizData.questions[i].type;
-      qq.img = quizData.questions[i].image;
-      qq.answer = quizData.questions[i].answer;
-      const retQuestion = this.questionRepository.save(qq);
+      const question = new Question();
+      question.quizId = retQuiz.quizId;
+      question.title = quizData.questions[i].title;
+      question.hint = quizData.questions[i].hint;
+      question.type = quizData.questions[i].type;
+      question.image = quizData.questions[i].image;
+      question.answer = quizData.questions[i].answer;
+      const retQuestion = await this.questionRepository.save(question);
 
       if (quizData.questions[i].questionItems === undefined) {
-        quiz.questions.push(qq); // for DBG
+        quiz.questions.push(question); // for DBG
         continue;
       }
-
-      qq.questionItems = Array<QuestionItem>();
+      question.questionItems = Array<QuestionItem>();
       for (var j = 0; j < quizData.questions[i].questionItems.length; j++) {
-        const ii = new QuestionItem();
-        ii.quizId = (await retQuiz).quizId;
-        ii.questionId = (await retQuestion).questionId;
-        ii.sequence = quizData.questions[i].questionItems[j].sequence;
-        ii.text = quizData.questions[i].questionItems[j].text;
-        ii.img = quizData.questions[i].questionItems[j].image;
-        qq.questionItems.push(ii); // for DBG
-        this.questionItemRepository.save(ii);
+        const questionItem = new QuestionItem();
+        questionItem.quizId = retQuiz.quizId;
+        questionItem.questionId = retQuestion.questionId;
+        questionItem.sequence = quizData.questions[i].questionItems[j].sequence;
+        questionItem.text = quizData.questions[i].questionItems[j].text;
+        questionItem.image = quizData.questions[i].questionItems[j].image;
+        question.questionItems.push(questionItem); // for DBG
+        this.questionItemRepository.save(questionItem);
       }
 
-      quiz.questions.push(qq); // for DBG
+      quiz.questions.push(question); // for DBG
     }
 
-    // return this.quizRepository.create(quiz);
+    console.log(quiz);
     return quiz;
   }
 
