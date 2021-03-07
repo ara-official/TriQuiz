@@ -23,22 +23,7 @@ export const editFileName = async function (req, file, callback) {
     const fileExtName = extname(file.originalname);
     var testFolder = '../image_upload/';
     var fs = require('fs');
-    /*
-   
-    const iv = randomBytes(16);
-    const password = 'Password used to generate key';
-
-    // The key length is dependent on the algorithm.
-    // In this case for aes256, it is 32 bytes.
-    const key = (await promisify(scrypt)(password, 'salt', 32)) as Buffer;
-    const cipher = createCipheriv('aes-256-ctr', key, iv);
-
-    const textToEncrypt = fileExtName;
-    const encryptedText = Buffer.concat([
-        cipher.update(textToEncrypt),
-        cipher.final(),
-    ]);
-    */
+    
     var hash = 1;
     var randomName;
     for (let i = 0; i < name.length; i++) {
@@ -49,28 +34,6 @@ export const editFileName = async function (req, file, callback) {
             .map(() => Math.round(Math.random() * 10).toString(10))
             .join('');
 
-    /*
-    while (true) {
-        var file_exist=1;
-        randomName = Array(5)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 10).toString(10))
-            .join('');
-
-        fs.exists(testFolder+`${hash}${randomName}${fileExtName}`, function (exists) {
-            if (!exists) {
-                console.log("uniq");
-                file_exist=0;
-            }
-        });
-        console.log(testFolder + `${hash}${randomName}${fileExtName}`);
-        console.log(file_exist);
-        if(file_exist==0)
-        {
-            break;
-        }
-    }
-    */
     callback(null, `${hash}${randomName}${fileExtName}`);
 };
 export const storeDirectory = async function (req, file, callback) {
