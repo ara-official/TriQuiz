@@ -6,7 +6,7 @@ import {
 } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Connection } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Quiz } from './entities/quiz.entities';
 import { Question } from './entities/question.entities';
 import { QuestionItem } from './entities/questionItem.entities';
@@ -30,7 +30,10 @@ export class QuizService {
       quizData.private === null ||
       quizData.password === null ||
       quizData.description === null ||
-      quizData.authorId === null
+      quizData.authorId === null ||
+      quizData.likeNum === null ||
+      quizData.questionNum === null ||
+      quizData.participationNum === null
     ) {
       throw new NotFoundException(`quiz 의 멤버변수는 null 이 될 수 없습니다.`);
     }
@@ -40,7 +43,10 @@ export class QuizService {
       typeof quizData.private !== 'boolean' ||
       typeof quizData.password !== 'string' ||
       typeof quizData.description !== 'string' ||
-      typeof quizData.authorId !== 'string'
+      typeof quizData.authorId !== 'string' ||
+      typeof quizData.likeNum !== 'number' ||
+      typeof quizData.questionNum !== 'number' ||
+      typeof quizData.participationNum !== 'number'
     ) {
       throw new NotFoundException(`quiz 의 멤버변수는 null 이 될 수 없습니다.`);
     }
@@ -95,6 +101,7 @@ export class QuizService {
     if (
       typeof questionItemData.text !== 'string' ||
       typeof questionItemData.sequence !== 'number' ||
+      isNaN(questionItemData.sequence) === true ||
       typeof questionItemData.image !== 'string'
     ) {
       throw new NotFoundException(
@@ -105,6 +112,95 @@ export class QuizService {
 
   getAll(): Promise<Quiz[]> {
     return this.quizRepository.find();
+  }
+
+  checkValidListQuery(num: number, keyword: string, order: string) {
+    if (
+      typeof num !== 'number' ||
+      isNaN(num) === true ||
+      typeof keyword !== 'string' ||
+      typeof order !== 'string'
+    ) {
+      throw new NotFoundException(
+        `Query String 을 확인해주세요. num: ${num}, keyword:${keyword}, order:${order}`,
+      );
+    }
+    const validQueryOrder = [
+      `create_time`,
+      `'create_time'`,
+      `"create_time"`,
+      `like_num`,
+      `'like_num'`,
+      `"like_num"`,
+      `question_num`,
+      `'question_num'`,
+      `"question_num"`,
+      `participation_num`,
+      `'participation_num'`,
+      `"participation_num"`,
+    ];
+    let bValid = false;
+    validQueryOrder.forEach((element) => {
+      if (element === order) {
+        bValid = true;
+      }
+    });
+    if (bValid === false) {
+      throw new NotFoundException(
+        `Query String 을 확인해주세요. 유효하지 않은 order: ${order}. (order 는 ${validQueryOrder} 만 유효합니다)`,
+      );
+    }
+  }
+
+  async getList(num: number, keyword: string, order: string): Promise<Quiz[]> {
+    return this.getListMore(0, num, keyword, order);
+  }
+
+  async getListMore(
+    id: number,
+    num: number,
+    keyword: string,
+    order: string,
+  ): Promise<Quiz[]> {
+    if (typeof id !== 'number' || isNaN(id) === true) {
+      throw new NotFoundException(`Query String 을 확인해주세요. id: ${id}`);
+    }
+    this.checkValidListQuery(num, keyword, order);
+
+    let searchKeyword =
+      '%' + keyword.replace(/\"/g, '').replace(/\'/g, '') + '%';
+    let retQuery = this.quizRepository
+      .createQueryBuilder()
+      .where(`quiz.title LIKE '${searchKeyword}'`);
+
+    switch (order) {
+      case 'create_time':
+        return await retQuery
+          .orderBy('quiz.createDateTime', 'DESC')
+          .offset(id)
+          .limit(num)
+          .getMany();
+      case 'like_num':
+        return await retQuery
+          .orderBy('quiz.likeNum', 'DESC')
+          .offset(id)
+          .limit(num)
+          .getMany();
+      case 'question_num':
+        return await retQuery
+          .orderBy('quiz.questionNum', 'DESC')
+          .offset(id)
+          .limit(num)
+          .getMany();
+      case 'participation_num':
+        return await retQuery
+          .orderBy('quiz.participationNum', 'DESC')
+          .offset(id)
+          .limit(num)
+          .getMany();
+      default:
+        throw new NotFoundException('Quiz List 를 얻어오는데 실패했습니다.');
+    }
   }
 
   async getOne(quizId: number): Promise<Quiz> {
@@ -173,6 +269,9 @@ export class QuizService {
     quiz.private = quizData.private;
     quiz.authorId = quizData.authorId;
     quiz.password = quizData.password;
+    quiz.questionNum = quizData.questionNum;
+    quiz.participationNum = quizData.participationNum;
+    quiz.likeNum = quizData.likeNum;
     const retQuiz = await this.quizRepository.save(quiz);
 
     if (quizData.questions === undefined) {
