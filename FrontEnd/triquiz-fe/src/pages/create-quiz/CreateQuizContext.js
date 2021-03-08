@@ -61,7 +61,7 @@ const quizContentsReducer = (state, action) => {
                     image: "",
                     placeholder: "",
                     questionItems: [],
-                    answer: null
+                    answer: ""
                 })
             };
         case 'MODIFY_QUESTION':
