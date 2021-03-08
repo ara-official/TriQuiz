@@ -6,12 +6,13 @@ const initialQuizContents = {
         {
             id: 1,
             title: "방탄 소년단의 모든것 1탄!",
-            thumbnailImage: "https://blogfiles.pstatic.net/MjAyMTAxMDNfMjM5/MDAxNjA5Njc5MDUwOTY4.duq-3lU_7yJpx_tAa9__aDgJeDhqwlFW4HTox81ygtAg.HR0HFEcR93u2h0_VMr4YNtRrkbr-mh-WPoX9691ADeMg.JPEG.kugjung112/1609676200328.jpg",
+            thumbnailImage: "https://image.chosun.com/sitedata/image/202009/01/2020090100517_0.jpg",
             private: false,
             authorId: "ehdtls901",
             questionNum: 10,
             participationNum: 120,
-            likeNum: 29
+            likeNum: 29,
+            createTime: 14
         },
         {
             id: 2,
@@ -21,7 +22,8 @@ const initialQuizContents = {
             authorId: "throw_exceptions",
             questionNum: 10,
             participationNum: 291,
-            likeNum: 182
+            likeNum: 182,
+            createTime: 12
         },
         {
             id: 3,
@@ -31,7 +33,8 @@ const initialQuizContents = {
             authorId: "hunihoon91",
             questionNum: 10,
             participationNum: 90,
-            likeNum: 21
+            likeNum: 21,
+            createTime: 11
         },
         {
             id: 4,
@@ -41,7 +44,8 @@ const initialQuizContents = {
             authorId: "throw_exceptions",
             questionNum: 10,
             participationNum: 121,
-            likeNum: 9
+            likeNum: 9,
+            createTime: 10
         },
         {
             id: 5,
@@ -51,7 +55,8 @@ const initialQuizContents = {
             authorId: "manager001",
             questionNum: 10,
             participationNum: 531,
-            likeNum: 423
+            likeNum: 423,
+            createTime: 9
         },
         {
             id: 6,
@@ -61,7 +66,8 @@ const initialQuizContents = {
             authorId: "SMS1989",
             questionNum: 10,
             participationNum: 120,
-            likeNum: 10
+            likeNum: 10,
+            createTime: 8
         },
         {
             id: 7,
@@ -71,7 +77,8 @@ const initialQuizContents = {
             authorId: "hunihoon91",
             questionNum: 10,
             participationNum: 420,
-            likeNum: 210
+            likeNum: 210,
+            createTime: 7
         },
         {
             id: 8,
@@ -81,7 +88,8 @@ const initialQuizContents = {
             authorId: "throw_exceptions",
             questionNum: 10,
             participationNum: 1120,
-            likeNum: 140
+            likeNum: 140,
+            createTime: 6
         },
         {
             id: 9,
@@ -91,7 +99,8 @@ const initialQuizContents = {
             authorId: "SMS1989",
             questionNum: 10,
             participationNum: 928,
-            likeNum: 867
+            likeNum: 867,
+            createTime: 5
         },
         {
             id: 10,
@@ -101,7 +110,8 @@ const initialQuizContents = {
             authorId: "manager001",
             questionNum: 10,
             participationNum: 0,
-            likeNum: 0
+            likeNum: 0,
+            createTime: 4
         },
         {
             id: 11,
@@ -111,7 +121,8 @@ const initialQuizContents = {
             authorId: "SMS1989",
             questionNum: 10,
             participationNum: 0,
-            likeNum: 0
+            likeNum: 0,
+            createTime: 3
         },
         {
             id: 12,
@@ -121,7 +132,8 @@ const initialQuizContents = {
             authorId: "ehdtls901",
             questionNum: 10,
             participationNum: 0,
-            likeNum: 0
+            likeNum: 0,
+            createTime: 2
         },
         {
             id: 13,
@@ -131,7 +143,19 @@ const initialQuizContents = {
             authorId: "SMS1989",
             questionNum: 10,
             participationNum: 0,
-            likeNum: 0
+            likeNum: 0,
+            createTime: 1
+        },
+        {
+            id: 14,
+            title: "퀴즈 13번 입니다. 아무나 오셈1313",
+            thumbnailImage: null,
+            private: false,
+            authorId: "SMS1989",
+            questionNum: 10,
+            participationNum: 0,
+            likeNum: 0,
+            createTime: 0
         }
     ]
 };
@@ -140,12 +164,50 @@ export const updateQuizList = quizList => ({
     type: "UPDATE_QUIZ_LIST",
     quizList
 });
+export const sortByDateTime = () => ({
+    type: "SORT_BY_DATE_TIME"
+});
+export const sortByParticipateNum = () => ({
+    type: "SORT_BY_PARTICIPATE_NUM"
+});
+export const sortByLikeNum = () => ({
+    type: "SORT_BY_LIKE_NUM"
+});
+export const sortByQuestionNum = () => ({
+    type: "SORT_BY_QUESTION_NUM"
+});
 const quizListReducer = (state, action) => {
     switch (action.type) {
         case "UPDATE_QUIZ_LIST":
             return {
                 ...state,
                 quizList: action.quizList
+            };
+        case "SORT_BY_DATE_TIME":
+            return {
+                ...state,
+                quizList: state.quizList.sort((a, b) => b.createTime - a.createTime)
+            };
+        case "SORT_BY_PARTICIPATE_NUM":
+            return {
+                ...state,
+                quizList: state.quizList
+                    .sort((a, b) => b.createTime - a.createTime)
+                    .sort((a, b) => b.participationNum - a.participationNum)
+            };
+        case "SORT_BY_LIKE_NUM":
+            return {
+                ...state,
+                quizList: state.quizList
+                    .sort((a, b) => b.createTime - a.createTime)
+                    .sort((a, b) => b.likeNum - a.likeNum)
+            };
+        case "SORT_BY_QUESTION_NUM":
+            return {
+                ...state,
+                quizList: state.quizList
+                    .sort((a, b) => b.createTime - a.createTime)
+                    .sort((a, b) => b.questionNum - a.questionNum)
             };
         default:
             return state;
