@@ -1,4 +1,5 @@
 import React, {createContext, useContext, useEffect, useReducer} from "react";
+import {getQuizList} from "../../api/triQuizAPI";
 
 const initialQuizContents = {
     quizList: [
@@ -135,8 +136,20 @@ const initialQuizContents = {
     ]
 };
 
+export const updateQuizList = quizList => ({
+    type: "UPDATE_QUIZ_LIST",
+    quizList
+});
 const quizListReducer = (state, action) => {
-    return state;
+    switch (action.type) {
+        case "UPDATE_QUIZ_LIST":
+            return {
+                ...state,
+                quizList: action.quizList
+            };
+        default:
+            return state;
+    }
 };
 
 const QuizListState = createContext();
@@ -147,6 +160,11 @@ function QuizListContext({ children }) {
 
     useEffect(() => {
         // 처음 리스트 가져와서 세팅하기
+        getQuizList()
+            .then(response => {
+                const quizList = response.data;
+                dispatch(updateQuizList(quizList));
+            });
     }, []);
 
     return (

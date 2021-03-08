@@ -1,12 +1,13 @@
 import React from "react";
 import style from "./QuizCard.module.css";
 import {BsPencil, HiOutlineDocumentReport, AiOutlineLike} from "react-icons/all";
+import {apiServerAddr} from "../../../api/triQuizAPI";
 
 function QuizCard({ quizData }) {
     return (
         <div className={style.Card}>
             <div className={style.Image}>
-                <img src={quizData.thumbnailImage} className={style.ImageSrc}/>
+                <img src={`${apiServerAddr}/image/` + quizData.thumbnailImage} className={style.ImageSrc}/>
             </div>
             <div className={style.Title}>{quizData.title}</div>
             <div className={style.Footer}>
