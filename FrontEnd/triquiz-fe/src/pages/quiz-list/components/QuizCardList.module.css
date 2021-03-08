@@ -1,5 +1,5 @@
 .CardListContainer {
-    margin-top: 3.5rem;
+    margin: 3.5rem 0rem;
     width: fit-content;
 }
 .CardList {
@@ -7,4 +7,23 @@
     flex-direction: row;
     flex-wrap: wrap;
     overflow: auto;
+    justify-content: center;
+}
+@media ( min-width: 768px ) {
+    .CardList {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow: auto;
+        justify-content: space-between;
+    }
+}
+@media ( min-width: 1024px ) {
+    .CardList {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow: auto;
+        justify-content: initial;
+    }
 }

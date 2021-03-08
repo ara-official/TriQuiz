@@ -7,6 +7,35 @@
     height: 20rem;
     border-radius: 0.5rem;
 }
+@media ( min-width: 768px ) {
+    .Card {
+        min-width: 20rem;
+        width: 45%;
+        max-width: 30rem;
+    }
+}
+@media ( min-width: 1024px ) {
+    .Card {
+        min-width: 20rem;
+        width: 30%;
+        max-width: 30rem;
+        margin: 0.5rem 0.6rem;
+    }
+}
+@media ( min-width: 1440px ) {
+    .Card {
+        min-width: 20rem;
+        width: 23%;
+        max-width: 30rem;
+        margin: 0.5rem 0.6rem;
+    }
+}
+@media ( min-width: 2048px ) {
+    .Card {
+        width: 20rem;
+        margin: 0.5rem 0.6rem;
+    }
+}
 .Title {
     display: flex;
     justify-content: center;
