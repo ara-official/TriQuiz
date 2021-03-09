@@ -12,10 +12,11 @@ import {
 @Entity()
 export class AttendQuiz {
   // @PrimaryGeneratedColumn({ name: 'questionId' })
+  @PrimaryColumn({ type: 'bigint' })
   @Generated('increment')
   attendQuizId: number;
-  @Column()
-  quizId: string;
+  @Column({ type: 'bigint' })
+  quizId: number;
   @CreateDateColumn()
   AttendDateTime: Date;
   @Column()

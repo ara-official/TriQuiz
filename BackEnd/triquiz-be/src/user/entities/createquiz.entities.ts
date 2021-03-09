@@ -12,10 +12,11 @@ import {
 @Entity()
 export class CreateQuiz {
   // @PrimaryGeneratedColumn({ name: 'questionId' })
+  @PrimaryColumn({ type: 'bigint' })
   @Generated('increment')
   crateQuizId: number;
-  @Column()
-  quizId: string;
+  @CreateDateColumn()
+  CreateDateTime: Date;
   @Column()
   quizPassword: string;
 }

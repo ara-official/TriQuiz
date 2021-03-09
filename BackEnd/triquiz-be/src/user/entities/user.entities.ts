@@ -14,6 +14,7 @@ import { CreateQuiz } from './createquiz.entities';
 @Entity()
 export class User {
   // @PrimaryGeneratedColumn({ name: 'questionId' })
+  @PrimaryColumn({ type: 'bigint' })
   @Generated('increment')
   userId: number;
   @Column()
@@ -21,7 +22,9 @@ export class User {
   @Column()
   password: string;
   @Column()
-  name: string;
+  joinMethod: string;
+  @Column()
+  nickname: string;
   @CreateDateColumn()
   joinDateTime: Date;
   @OneToMany((type) => CreateQuiz, (quiz) => quiz.quizId)
