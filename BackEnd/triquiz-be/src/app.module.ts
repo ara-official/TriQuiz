@@ -5,6 +5,7 @@ import { ImageController } from './image/image.controller';
 import { ImageService } from './image/image.service';
 import { FilesModule } from './files/files.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { UserController } from './user/user.controller';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { MulterModule } from '@nestjs/platform-express';
     }),
     FilesModule
   ],
-  controllers: [AppController, ImageController],
+  controllers: [AppController, ImageController, UserController],
   providers: [AppService , ImageService],
 })
 export class AppModule {}
