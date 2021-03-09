@@ -17,7 +17,7 @@ import { UpdateQuizDto } from './dto/update-quiz.dto';
 export class QuizController {
   constructor(readonly quizService: QuizService) {} // NOTE: service 에 접근하기 위해서 생성자에 quizService 라는 Property 를 요청?해야 함.
 
-  @Get()
+  @Get('')
   getAll(): Promise<Quiz[]> {
     return this.quizService.getAll();
   }
@@ -28,7 +28,7 @@ export class QuizController {
     @Query('keyword') keyword: string,
     @Query('order') order: string,
   ): Promise<Quiz[]> {
-    console.log('getList', num, keyword, order);
+    console.log('[getList]', num, keyword, order);
     return this.quizService.getList(num, keyword, order);
   }
 
@@ -39,27 +39,12 @@ export class QuizController {
     @Query('keyword') keyword: string,
     @Query('order') order: string,
   ): Promise<Quiz[]> {
-    console.log('getListMore', id, num, keyword, order);
+    console.log('[getListMore]', id, num, keyword, order);
     return this.quizService.getListMore(id, num, keyword, order);
-  }
-
-  @Get('/:id')
-  getOne(@Param('id') quizId: number): Promise<Quiz> {
-    return this.quizService.getOne(quizId);
   }
 
   @Post()
   create(@Body() quizData: CreateQuizDto): Promise<Quiz> {
     return this.quizService.create(quizData);
-  }
-
-  @Delete('/:id')
-  remove(@Param('id') quizId: number) {
-    return this.quizService.deleteOne(quizId);
-  }
-
-  @Patch('/:id') // NOTE: Patch 는 일부만 수정할 때 사용. 참고로 Put 은 전체를 수정할 때 사용된다고 한다.
-  update(@Param('id') quizId: number, @Body() updateData: UpdateQuizDto) {
-    return this.quizService.update(quizId, updateData);
   }
 }

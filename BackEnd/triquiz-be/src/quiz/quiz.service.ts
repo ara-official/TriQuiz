@@ -4,9 +4,8 @@ import {
   QuestionDto,
   QuestionItemDto,
 } from './dto/create-quiz.dto';
-import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Quiz } from './entities/quiz.entities';
 import { Question } from './entities/question.entities';
 import { QuestionItem } from './entities/questionItem.entities';
@@ -22,36 +21,14 @@ export class QuizService {
     private questionItemRepository: Repository<QuestionItem>, // private connection: Connection,
   ) {}
 
-  // NOTE: DTO 에서 validation check 가 안되는 경우(null check)가 있어서, 아래 check 함수 3종을 추가했음.
+  async getAll(): Promise<Quiz[]> {
+    return this.quizRepository.find();
+  }
+
+  // NOTE: DTO_A 내에 DTO_B 가 있을 경우에, DTO_B 가 정상적으로 동작하지 못합니다. 때문에 유효성 검사하는 code 를 추가했습니다.
   checkValidQuizData(quizData: CreateQuizDto) {
-    if (
-      quizData.title === null ||
-      quizData.thumbnailImage === null ||
-      quizData.private === null ||
-      quizData.password === null ||
-      quizData.description === null ||
-      quizData.authorId === null ||
-      quizData.likeNum === null ||
-      quizData.questionNum === null ||
-      quizData.participationNum === null
-    ) {
-      throw new NotFoundException(`quiz 의 멤버변수는 null 이 될 수 없습니다.`);
-    }
-    if (
-      typeof quizData.title !== 'string' ||
-      typeof quizData.thumbnailImage !== 'string' ||
-      typeof quizData.private !== 'boolean' ||
-      typeof quizData.password !== 'string' ||
-      typeof quizData.description !== 'string' ||
-      typeof quizData.authorId !== 'string' ||
-      typeof quizData.likeNum !== 'number' ||
-      typeof quizData.questionNum !== 'number' ||
-      typeof quizData.participationNum !== 'number'
-    ) {
-      throw new NotFoundException(`quiz 의 멤버변수는 null 이 될 수 없습니다.`);
-    }
     if (quizData.questions === undefined) {
-      throw new NotFoundException(`Question not found`);
+      throw new NotFoundException(`Question 을 추가해주세요.`);
     }
     for (var i = 0; i < quizData.questions.length; i++) {
       this.checkValidQuestionData(quizData.questions[i]);
@@ -63,6 +40,7 @@ export class QuizService {
       }
     }
   }
+
   checkValidQuestionData(questionData: QuestionDto) {
     console.log(questionData);
     if (
@@ -84,10 +62,11 @@ export class QuizService {
       typeof questionData.answer !== 'string'
     ) {
       throw new NotFoundException(
-        `Question 의 멤버 변수는 null 이 될 수 없습니다.`,
+        `Question 의 멤버 변수 type 이 잘못 되었습니다.`,
       );
     }
   }
+
   checkValidQuestionItemData(questionItemData: QuestionItemDto) {
     if (
       questionItemData.text === null ||
@@ -105,13 +84,9 @@ export class QuizService {
       typeof questionItemData.image !== 'string'
     ) {
       throw new NotFoundException(
-        `QuestionItem 의 멤버 변수의 type 이 잘 못 되었습니다.`,
+        `QuestionItem 의 멤버 변수 type 이 잘못 되었습니다.`,
       );
     }
-  }
-
-  getAll(): Promise<Quiz[]> {
-    return this.quizRepository.find();
   }
 
   checkValidListQuery(num: number, keyword: string, order: string) {
@@ -125,19 +100,13 @@ export class QuizService {
         `Query String 을 확인해주세요. num: ${num}, keyword:${keyword}, order:${order}`,
       );
     }
+
+    order = order.replace(/\"/g, '').replace(/\'/g, '');
     const validQueryOrder = [
       `create_time`,
-      `'create_time'`,
-      `"create_time"`,
       `like_num`,
-      `'like_num'`,
-      `"like_num"`,
       `question_num`,
-      `'question_num'`,
-      `"question_num"`,
       `participation_num`,
-      `'participation_num'`,
-      `"participation_num"`,
     ];
     let bValid = false;
     validQueryOrder.forEach((element) => {
@@ -165,10 +134,11 @@ export class QuizService {
     if (typeof id !== 'number' || isNaN(id) === true) {
       throw new NotFoundException(`Query String 을 확인해주세요. id: ${id}`);
     }
+    order = order.replace(/\"/g, '').replace(/\'/g, '');
+    keyword = keyword.replace(/\"/g, '').replace(/\'/g, '');
     this.checkValidListQuery(num, keyword, order);
 
-    let searchKeyword =
-      '%' + keyword.replace(/\"/g, '').replace(/\'/g, '') + '%';
+    let searchKeyword = '%' + keyword + '%';
     let retQuery = this.quizRepository
       .createQueryBuilder()
       .where(`quiz.title LIKE '${searchKeyword}'`);
@@ -201,62 +171,6 @@ export class QuizService {
       default:
         throw new NotFoundException('Quiz List 를 얻어오는데 실패했습니다.');
     }
-  }
-
-  async getOne(quizId: number): Promise<Quiz> {
-    let quiz = await this.quizRepository.findOne(quizId);
-    if (quiz === undefined) {
-      throw new NotFoundException(`Quiz with ID ${quizId} not found`);
-    }
-
-    let questions = (await this.questionRepository.find()).filter(
-      (question) => question.quizId === quizId,
-    );
-    if (questions === undefined) {
-      return quiz;
-    }
-
-    let questionItems = (await this.questionItemRepository.find()).filter(
-      (questionItem) => questionItem.quizId === quizId,
-    );
-
-    if (questionItems !== undefined) {
-      for (let i = 0; i < questions.length; i++) {
-        let questionItem = questionItems.filter(
-          (questionItem) => questionItem.questionId === questions[i].questionId,
-        );
-        questions[i].questionItems = questionItem;
-      }
-    }
-    quiz.questions = questions;
-
-    return quiz;
-  }
-
-  async deleteOne(quizId: number) {
-    await this.getOne(quizId); // NOTE: Error return
-
-    let questionItems = (await this.questionItemRepository.find()).filter(
-      (questionItem) => questionItem.quizId === quizId,
-    );
-    if (questionItems !== undefined) {
-      for (let i = 0; i < questionItems.length; i++) {
-        await this.questionItemRepository.delete(
-          questionItems[i].questionItemId,
-        );
-      }
-    }
-
-    let questions = (await this.questionRepository.find()).filter(
-      (question) => question.quizId === quizId,
-    );
-    if (questions !== undefined) {
-      for (let i = 0; i < questions.length; i++) {
-        await this.questionRepository.delete(questions[i].questionId);
-      }
-    }
-
-    await this.quizRepository.delete(quizId);
   }
 
   async create(quizData: CreateQuizDto): Promise<Quiz> {
@@ -308,15 +222,7 @@ export class QuizService {
       quiz.questions.push(question); // for DBG
     }
 
-    console.log(quiz);
+    console.log(quiz); // for DBG
     return quiz;
-  }
-
-  update(quizId: number, updateData: UpdateQuizDto) {
-    const quiz = this.getOne(quizId);
-    console.log(quiz);
-    // this.deleteOne(quizId);
-    // this.quizzes.push({ ...quiz, ...updateData });
-    this.quizRepository.update(quizId, updateData);
   }
 }
