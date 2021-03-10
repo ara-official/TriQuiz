@@ -11,33 +11,41 @@ import {
 function errorMsg(field: string) {
   return `유효하지 않은 ${field} 입니다.`;
 }
+function isNotEmptyMsg(field: string) {
+  return `${field} 가 잘못되었습니다. (!== '', !== null, !== undefined)`;
+}
+function definedMsg(field: string) {
+  return `${field} 가 잘못되었습니다. (!== undefined, !== null)`;
+}
 export class CreateQuizDto {
-  @IsNotEmpty()
+  @IsNotEmpty({ message: isNotEmptyMsg('title') })
   @IsString({ message: errorMsg('title') })
   readonly title: string;
-  @IsNotEmpty()
+  @IsNotEmpty({ message: isNotEmptyMsg('private') })
   @IsBoolean({ message: errorMsg('private') })
   readonly private: boolean;
-  @IsNotEmpty()
+  @IsNotEmpty({ message: isNotEmptyMsg('authorId') })
   @IsString({ message: errorMsg('authorId') })
   readonly authorId: string;
-  // @IsNotEmpty()
+  @IsDefined({ message: definedMsg('password') })
   @IsString({ message: errorMsg('password') })
   readonly password: string;
-  // @IsNotEmpty()
   @IsOptional()
+  @IsDefined({ message: definedMsg('questionNum') })
   @IsNumber({}, { message: errorMsg('questionNum') })
   readonly questionNum: number;
-  // @IsNotEmpty()
   @IsOptional()
+  @IsDefined({ message: definedMsg('participationNum') })
   @IsNumber({}, { message: errorMsg('participationNum') })
   readonly participationNum: number;
-  // @IsNotEmpty()
   @IsOptional()
+  @IsDefined({ message: definedMsg('participationNum') })
   @IsNumber({}, { message: errorMsg('likeNum') })
   readonly likeNum: number;
+  @IsDefined({ message: definedMsg('description') })
   @IsString({ message: errorMsg('description') })
   readonly description: string;
+  @IsDefined({ message: definedMsg('thumbnailImage') })
   @IsString({ message: errorMsg('thumbnailImage') })
   readonly thumbnailImage: string;
   @IsOptional()
@@ -45,17 +53,19 @@ export class CreateQuizDto {
 }
 
 export class QuestionDto {
-  // @IsNotEmpty()
+  @IsNotEmpty()
   @IsString({ message: errorMsg('title') })
   readonly title: string;
+  @IsDefined()
   @IsString({ message: errorMsg('hint') })
   readonly hint: string;
   @IsNotEmpty()
   @IsString({ message: errorMsg('type') })
   readonly type: string;
+  @IsDefined()
   @IsString({ message: errorMsg('image') })
   readonly image: string;
-  @IsNotEmpty({ message: 'not null' })
+  @IsNotEmpty({})
   @IsString({ message: errorMsg('answer') })
   readonly answer: string;
   @IsOptional()
@@ -69,6 +79,7 @@ export class QuestionItemDto {
   @IsNotEmpty()
   @IsString({ message: errorMsg('text') })
   readonly text: string;
+  @IsDefined()
   @IsString({ message: errorMsg('image') })
   readonly image: string;
 }
