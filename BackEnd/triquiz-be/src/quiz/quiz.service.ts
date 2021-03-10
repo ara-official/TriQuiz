@@ -42,7 +42,6 @@ export class QuizService {
   }
 
   checkValidQuestionData(questionData: QuestionDto) {
-    console.log(questionData);
     if (
       questionData.title === null ||
       questionData.hint === null ||
@@ -102,13 +101,14 @@ export class QuizService {
     }
 
     order = order.replace(/\"/g, '').replace(/\'/g, '');
+
+    let bValid = false;
     const validQueryOrder = [
       `create_time`,
       `like_num`,
       `question_num`,
       `participation_num`,
     ];
-    let bValid = false;
     validQueryOrder.forEach((element) => {
       if (element === order) {
         bValid = true;
@@ -122,7 +122,39 @@ export class QuizService {
   }
 
   async getList(num: number, keyword: string, order: string): Promise<Quiz[]> {
-    return this.getListMore(0, num, keyword, order);
+    order = order.replace(/\"/g, '').replace(/\'/g, '');
+    keyword = keyword.replace(/\"/g, '').replace(/\'/g, '');
+    this.checkValidListQuery(num, keyword, order);
+
+    let searchKeyword = '%' + keyword + '%';
+    let retQuery = this.quizRepository
+      .createQueryBuilder()
+      .where(`quiz.title LIKE '${searchKeyword}'`);
+
+    switch (order) {
+      case 'create_time':
+        return await retQuery
+          .orderBy('quiz.createDateTime', 'DESC')
+          .limit(num)
+          .getMany();
+      case 'like_num':
+        return await retQuery
+          .orderBy('quiz.likeNum', 'DESC')
+          .limit(num)
+          .getMany();
+      case 'question_num':
+        return await retQuery
+          .orderBy('quiz.questionNum', 'DESC')
+          .limit(num)
+          .getMany();
+      case 'participation_num':
+        return await retQuery
+          .orderBy('quiz.participationNum', 'DESC')
+          .limit(num)
+          .getMany();
+      default:
+        throw new NotFoundException('Quiz List 를 얻어오는데 실패했습니다.');
+    }
   }
 
   async getListMore(
@@ -147,25 +179,25 @@ export class QuizService {
       case 'create_time':
         return await retQuery
           .orderBy('quiz.createDateTime', 'DESC')
-          .offset(id)
+          .andWhere(`quiz.quizId < ${id}`)
           .limit(num)
           .getMany();
       case 'like_num':
         return await retQuery
           .orderBy('quiz.likeNum', 'DESC')
-          .offset(id)
+          .andWhere(`quiz.quizId < ${id}`)
           .limit(num)
           .getMany();
       case 'question_num':
         return await retQuery
           .orderBy('quiz.questionNum', 'DESC')
-          .offset(id)
+          .andWhere(`quiz.quizId < ${id}`)
           .limit(num)
           .getMany();
       case 'participation_num':
         return await retQuery
           .orderBy('quiz.participationNum', 'DESC')
-          .offset(id)
+          .andWhere(`quiz.quizId < ${id}`)
           .limit(num)
           .getMany();
       default:
@@ -201,12 +233,13 @@ export class QuizService {
       question.type = quizData.questions[i].type;
       question.image = quizData.questions[i].image;
       question.answer = quizData.questions[i].answer;
-      const retQuestion = await this.questionRepository.save(question);
+      let retQuestion = await this.questionRepository.save(question);
 
       if (quizData.questions[i].questionItems === undefined) {
         quiz.questions.push(question); // for DBG
         continue;
       }
+
       question.questionItems = Array<QuestionItem>();
       for (var j = 0; j < quizData.questions[i].questionItems.length; j++) {
         const questionItem = new QuestionItem();

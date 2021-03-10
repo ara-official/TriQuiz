@@ -21,16 +21,19 @@ export class CreateQuizDto {
   @IsNotEmpty()
   @IsString({ message: errorMsg('authorId') })
   readonly authorId: string;
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString({ message: errorMsg('password') })
   readonly password: string;
-  @IsNotEmpty()
+  // @IsNotEmpty()
+  @IsOptional()
   @IsNumber({}, { message: errorMsg('questionNum') })
   readonly questionNum: number;
-  @IsNotEmpty()
+  // @IsNotEmpty()
+  @IsOptional()
   @IsNumber({}, { message: errorMsg('participationNum') })
   readonly participationNum: number;
-  @IsNotEmpty()
+  // @IsNotEmpty()
+  @IsOptional()
   @IsNumber({}, { message: errorMsg('likeNum') })
   readonly likeNum: number;
   @IsString({ message: errorMsg('description') })
@@ -42,7 +45,7 @@ export class CreateQuizDto {
 }
 
 export class QuestionDto {
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString({ message: errorMsg('title') })
   readonly title: string;
   @IsString({ message: errorMsg('hint') })
@@ -50,10 +53,9 @@ export class QuestionDto {
   @IsNotEmpty()
   @IsString({ message: errorMsg('type') })
   readonly type: string;
-  @IsOptional()
   @IsString({ message: errorMsg('image') })
   readonly image: string;
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'not null' })
   @IsString({ message: errorMsg('answer') })
   readonly answer: string;
   @IsOptional()
@@ -61,11 +63,12 @@ export class QuestionDto {
 }
 
 export class QuestionItemDto {
+  @IsNotEmpty()
   @IsNumber({}, { message: errorMsg('sequence') })
   readonly sequence: number;
+  @IsNotEmpty()
   @IsString({ message: errorMsg('text') })
   readonly text: string;
-  @IsOptional()
   @IsString({ message: errorMsg('image') })
   readonly image: string;
 }
