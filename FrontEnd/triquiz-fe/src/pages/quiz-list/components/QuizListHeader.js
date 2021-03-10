@@ -38,6 +38,13 @@ function QuizListHeader() {
         quizListDispatch(setSearchText(text));
     };
 
+    const searchOnEnter = async e => {
+        if (e.code !== "Enter") return;
+        e.preventDefault();
+        const {data: quizList} = await getQuizList(5, search.text, search.order);
+        quizListDispatch(updateQuizList(quizList));
+    }
+
     const searchOnClick = async e => {
         e.preventDefault();
         const {data: quizList} = await getQuizList(5, search.text, search.order);
@@ -59,7 +66,9 @@ function QuizListHeader() {
                     <AiOutlineMenu/>
                 </div>
                 <input type="text" className={style.SearchInput}
-                       onChange={searchTextOnChange} value={search.text}
+                       onChange={searchTextOnChange}
+                       onKeyPress={searchOnEnter}
+                       value={search.text}
                 />
                 <button className={style.SearchButton}
                         onClick={searchOnClick}
