@@ -1,7 +1,11 @@
-import React, {createContext, useContext, useEffect, useReducer} from "react";
-import {getQuizList} from "../../api/triQuizAPI";
+import React, {createContext, useContext, useReducer} from "react";
+import {LIST_ORDER} from "../../api/triQuizAPI";
 
 const initialQuizContents = {
+    search: {
+        text: "",
+        order: LIST_ORDER.CREATE_TIME
+    },
     quizList: [
         {
             id: 1,
@@ -164,6 +168,10 @@ export const updateQuizList = quizList => ({
     type: "UPDATE_QUIZ_LIST",
     quizList
 });
+export const addQuizList = quizList => ({
+    type: "ADD_QUIZ_LIST",
+    quizList
+});
 export const sortByDateTime = () => ({
     type: "SORT_BY_DATE_TIME"
 });
@@ -176,6 +184,10 @@ export const sortByLikeNum = () => ({
 export const sortByQuestionNum = () => ({
     type: "SORT_BY_QUESTION_NUM"
 });
+export const setSearchText = text => ({
+    type: "SET_SEARCH_TEXT",
+    text
+});
 const quizListReducer = (state, action) => {
     switch (action.type) {
         case "UPDATE_QUIZ_LIST":
@@ -183,31 +195,50 @@ const quizListReducer = (state, action) => {
                 ...state,
                 quizList: action.quizList
             };
+        case "ADD_QUIZ_LIST":
+            return {
+                ...state,
+                quizList: state.quizList.concat(action.quizList)
+            };
         case "SORT_BY_DATE_TIME":
             return {
                 ...state,
-                quizList: state.quizList.sort((a, b) => b.createTime - a.createTime)
+                search: {
+                    ...state.search,
+                    order: LIST_ORDER.CREATE_TIME
+                }
             };
         case "SORT_BY_PARTICIPATE_NUM":
             return {
                 ...state,
-                quizList: state.quizList
-                    .sort((a, b) => b.createTime - a.createTime)
-                    .sort((a, b) => b.participationNum - a.participationNum)
+                search: {
+                    ...state.search,
+                    order: LIST_ORDER.PARTICIPATION_NUM
+                }
             };
         case "SORT_BY_LIKE_NUM":
             return {
                 ...state,
-                quizList: state.quizList
-                    .sort((a, b) => b.createTime - a.createTime)
-                    .sort((a, b) => b.likeNum - a.likeNum)
+                search: {
+                    ...state.search,
+                    order: LIST_ORDER.LIKE_NUM
+                }
             };
         case "SORT_BY_QUESTION_NUM":
             return {
                 ...state,
-                quizList: state.quizList
-                    .sort((a, b) => b.createTime - a.createTime)
-                    .sort((a, b) => b.questionNum - a.questionNum)
+                search: {
+                    ...state.search,
+                    order: LIST_ORDER.QUESTION_NUM
+                }
+            };
+        case "SET_SEARCH_TEXT":
+            return {
+                ...state,
+                search: {
+                    ...state.search,
+                    text: action.text
+                }
             };
         default:
             return state;
@@ -219,15 +250,6 @@ const QuizListDispatch = createContext();
 
 function QuizListContext({ children }) {
     const [state, dispatch] = useReducer(quizListReducer, initialQuizContents);
-
-    useEffect(() => {
-        // 처음 리스트 가져와서 세팅하기
-        getQuizList()
-            .then(response => {
-                const quizList = response.data;
-                dispatch(updateQuizList(quizList));
-            });
-    }, []);
 
     return (
         <QuizListState.Provider value={state}>

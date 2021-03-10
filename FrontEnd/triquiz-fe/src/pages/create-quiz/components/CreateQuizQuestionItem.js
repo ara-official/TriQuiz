@@ -40,7 +40,7 @@ function CreateQuizQuestionItem({ removeItem, textOnChange, imageOnChange, answe
         </div>
             {
                 (item.image)
-                ? (<img className="question-item-preview" src={itemImagePreview}/>)
+                ? (<img className="question-item-preview" src={itemImagePreview} alt="문제 항목 이미지"/>)
                 : null
             }
         </>

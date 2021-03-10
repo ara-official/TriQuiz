@@ -1,9 +1,11 @@
 import React, {useEffect} from "react";
 import style from "./QuizListHeader.module.css";
 import {AiOutlineMenu} from "react-icons/all";
-import {sortByDateTime, sortByLikeNum, sortByParticipateNum, sortByQuestionNum, useQuizListDispatch} from "../QuizListContext";
+import {setSearchText, sortByDateTime, sortByLikeNum, sortByParticipateNum, sortByQuestionNum, updateQuizList, useQuizListDispatch, useQuizListState} from "../QuizListContext";
+import {getQuizList} from "../../../api/triQuizAPI";
 
 function QuizListHeader() {
+    const {search} = useQuizListState();
     const quizListDispatch = useQuizListDispatch();
 
     const sortingOnChange = e => {
@@ -26,14 +28,29 @@ function QuizListHeader() {
         }
     }
 
-    const CreateOnClick = e => {
+    const createOnClick = e => {
         e.preventDefault();
         window.location.href = "/create-quiz";
     };
 
+    const searchTextOnChange = e => {
+        const text = e.target.value;
+        quizListDispatch(setSearchText(text));
+    };
+
+    const searchOnClick = async e => {
+        e.preventDefault();
+        const {data: quizList} = await getQuizList(5, search.text, search.order);
+        quizListDispatch(updateQuizList(quizList));
+    };
+
     useEffect(() => {
-        quizListDispatch(sortByDateTime());
-    }, []);
+        getQuizList(5, search.text, search.order)
+            .then(response => {
+                const {data: quizList} = response;
+                quizListDispatch(updateQuizList(quizList));
+            });
+    }, [search.order]);
 
     return (
         <header className={style.Header}>
@@ -41,8 +58,12 @@ function QuizListHeader() {
                 <div className={style.MyQuizButton}>
                     <AiOutlineMenu/>
                 </div>
-                <input type="text" className={style.SearchInput}/>
-                <button className={style.SearchButton}>
+                <input type="text" className={style.SearchInput}
+                       onChange={searchTextOnChange} value={search.text}
+                />
+                <button className={style.SearchButton}
+                        onClick={searchOnClick}
+                >
                     검색
                 </button>
                 <select onChange={sortingOnChange}>
@@ -54,7 +75,7 @@ function QuizListHeader() {
             </div>
             <div className={style.HeaderRight}>
                 <button className={style.CreateButton}
-                        onClick={CreateOnClick}
+                        onClick={createOnClick}
                 >
                     만들기
                 </button>

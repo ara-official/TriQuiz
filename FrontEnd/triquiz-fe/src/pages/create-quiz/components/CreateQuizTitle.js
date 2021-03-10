@@ -11,7 +11,7 @@ function CreateQuizTitle() {
         description: "",
         thumbnailImage: "",
         private: false,
-        authorId: "",
+        authorId: "test_ID",
         password: "",
     });
     const [titleImagePreview, setTitleImagePreview] = useState("");
@@ -46,7 +46,7 @@ function CreateQuizTitle() {
                     <BsImage/>
                     {
                         (titleState.thumbnailImage)
-                        ? (<img src={titleImagePreview} className="title-image-preview"/>)
+                        ? (<img src={titleImagePreview} className="title-image-preview" alt="썸네일 이미지"/>)
                         : (<span>썸네일 이미지를 등록하세요.(필수 아님)</span>)
                     }
                 </label>

@@ -9,6 +9,17 @@
     overflow: auto;
     justify-content: center;
 }
+.MoreQuizButton {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.MoreQuizButton .Button {
+    font-size: 2rem;
+}
 @media ( min-width: 768px ) {
     .CardList {
         display: flex;
