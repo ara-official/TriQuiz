@@ -1,0 +1,55 @@
+.Header {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 3rem;
+    border-bottom: 1px solid black;
+    background-color: white;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+}
+.HeaderLeft {
+    position: absolute;
+    left: 0;
+    right: auto;
+    display: flex;
+    flex-direction: row;
+}
+.HeaderRight {
+    position: absolute;
+    right: 0;
+    left: auto;
+    display: flex;
+    flex-direction: row-reverse;
+}
+.MyQuizButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem;
+    cursor: pointer;
+}
+.SearchInput {
+    width: 6rem;
+    border-color: #333333;
+    border-radius: 0.3rem;
+}
+.SearchButton, .CreateButton {
+    background-color: white;
+    border-radius: 0.3rem;
+    border: 1px solid #333333;
+    height: 2rem;
+    margin: 0rem 0.5rem;
+    cursor: pointer;
+}
+.CreateButton {
+    width: 4.5rem;
+}
+.SearchButton {
+    width: 3rem;
+}
+.SearchButton:hover, .CreateButton:hover {
+    color: white;
+    background-color: #333333;
+}
