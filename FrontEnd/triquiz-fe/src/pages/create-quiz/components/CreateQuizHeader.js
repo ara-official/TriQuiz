@@ -8,16 +8,20 @@ function CreateQuizHeader() {
 
     const convertFile2Url = async () => {
         const quizData = quizState;
+        let uploadImageData = null;
         if (quizData.thumbnailImage) {
-            quizData.thumbnailImage = await uploadImage(quizData.thumbnailImage);
+            uploadImageData = await uploadImage(quizData.thumbnailImage);
+            quizData.thumbnailImage = uploadImageData.data.data.filename;
         }
         for (let question of quizData.questions) {
             if (question.image) {
-                question.image = await uploadImage(question.image);
+                uploadImageData  = await uploadImage(question.image);
+                question.image = uploadImageData.data.data.filename;
             }
             for (let item of question.questionItems) {
                 if (item.image) {
-                    item.image = await uploadImage(item.image);
+                    uploadImageData = await uploadImage(item.image);
+                    item.image = uploadImageData.data.data.filename;
                 }
             }
         }
@@ -34,7 +38,7 @@ function CreateQuizHeader() {
 
     const gotoListOnClick = e => {
         e.preventDefault();
-        window.location.href = "/";
+        window.location.href = "/quiz-list";
     };
 
     return (

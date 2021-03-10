@@ -130,7 +130,7 @@ function CreateQuizQuestion({ question }) {
             {
                 (questionState.image)
                 ? (<div className="question-image-preview-div">
-                        <img src={previewImage} className="question-image-preview"/>
+                        <img src={previewImage} className="question-image-preview" alt="문제 이미지"/>
                 </div>)
                 : null
             }

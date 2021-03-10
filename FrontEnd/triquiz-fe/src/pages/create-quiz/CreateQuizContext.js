@@ -6,7 +6,7 @@ const initialQuizContents = {
     description: "",
     thumbnailImage: "",
     private: false,
-    authorId: "",
+    authorId: "test_ID",
     password: "",
     questions: [
         {
