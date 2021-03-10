@@ -1,39 +1,24 @@
-import { Controller, Get, Post,UseInterceptors, UploadedFile, UploadedFiles, Res, Param, HttpStatus } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import {
+  Controller,
+  Get,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  Res,
+  Param,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { editFileName, imageFileFilter, storeDirectory } from '../utils/file-upload.utils';
+import { editFileName, imageFileFilter } from '../utils/file-upload.utils';
+import { ImageService } from './image.service';
 
 @Controller('image')
 export class ImageController {
-  constructor() {}
+  constructor(readonly imageService: ImageService) {}
 
-  // upload single file
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
-      storage: diskStorage({
-        //destination: storeDirectory,
-        destination:'./image_upload',
-        filename: editFileName,
-      }),
-      fileFilter: imageFileFilter,
-    }),
-  )
-  async uploadedFile(@UploadedFile() file) {
-    const response = {
-      originalname: file.originalname,
-      filename: file.filename,
-    };
-    return {
-      status: HttpStatus.OK,
-      message: 'Image uploaded successfully!',
-      data: response,
-    };
-  }
-
-  @Post('uploadMultipleFiles')
-  @UseInterceptors(
-    FilesInterceptor('image', 10, {
       storage: diskStorage({
         destination: './image_upload',
         filename: editFileName,
@@ -41,28 +26,12 @@ export class ImageController {
       fileFilter: imageFileFilter,
     }),
   )
-  async uploadMultipleFiles(@UploadedFiles() files) {
-    const response = [];
-    files.forEach(file => {
-      const fileReponse = {
-        originalname: file.originalname,
-        filename: file.filename,
-      };
-      response.push(fileReponse);
-    });
-    return {
-      status: HttpStatus.OK,
-      message: 'Images uploaded successfully!',
-      data: response,
-    };
+  uploadedFile(@UploadedFile() file: any) {
+    return this.imageService.uploadedFile(file);
   }
 
   @Get(':imagename')
-  getImage(@Param('imagename') image, @Res() res) {
-    const response = res.sendFile(image, { root: './image_upload' });
-    return {
-      status: HttpStatus.OK,
-      data: response,
-    };
+  getImage(@Param('imagename') image: string, @Res() res: any) {
+    return this.imageService.getImage(image, res);
   }
 }
