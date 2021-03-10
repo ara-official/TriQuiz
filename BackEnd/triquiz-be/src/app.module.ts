@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'; // NOTE: ORM(Object Relational 
 import { Quiz } from './quiz/entities/quiz.entities';
 import { QuizModule } from './quiz/quiz.module';
 import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { ImageModule } from './image/image.module';
 import { getConnectionOptions } from 'typeorm';
 
 @Module({
@@ -12,8 +14,9 @@ import { getConnectionOptions } from 'typeorm';
         Object.assign(await getConnectionOptions(), { autoLoadEntities: true }),
     }),
     QuizModule,
+    ImageModule
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [AppService],
 })
-export class AppModule {} // NOTE: root module. 단 하나만 존재하는 module
+export class AppModule {}
