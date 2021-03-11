@@ -5,7 +5,7 @@ let testFolder = './image_upload/';
 
 export const imageFileFilter = async function (
   req: Request,
-  file: Express.Multer.File,
+  file: any,
   callback: Function,
 ) {
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {

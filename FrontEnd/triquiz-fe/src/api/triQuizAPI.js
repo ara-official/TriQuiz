@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const apiServerAddr = "http://172.30.1.53:8000";
-export const imageServerAddr = "http://172.30.1.53:9000";
+export const apiServerAddr = "http://localhost:8000";
+export const imageServerAddr = apiServerAddr;
 
 export const createQuiz = (quizData) => new Promise((resolve, reject) => {
     axios({
